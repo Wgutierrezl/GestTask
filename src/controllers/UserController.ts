@@ -67,4 +67,20 @@ export class UserController{
             return res.status(500).json({ message: "No hemos logrado encontrar el usuario"});
         }
     }
+
+
+    getAllUsers=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getAllUsers();
+            if(response==null){
+                return res.status(404).json({message:"aun no hay usuarios registrados en el sistema"});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            console.log(error);
+            return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
+        }
+    }
 }

@@ -19,8 +19,17 @@ export class UserService implements IUserService{
         this._token=token;
         this._hasher=hasher;
     }
+    
+    async getAllUsers(): Promise<UserInfoDTO | null> {
+        const response=await this._repo.getAllUsers();
+        if(response.length==0 || response==null){
+            return null;
+        }
 
-    async createUser(user: UserDTO): Promise<UserDTO> {
+        return response;
+    }
+
+    async createUser(user: UserDTO): Promise<UserInfoDTO> {
         const userData=new UserEntity();
 
         const passwordHash=this._hasher.encryptPassword(user.contrasena);
@@ -34,12 +43,14 @@ export class UserService implements IUserService{
         const saved=await this._repo.createUser(userData);
         console.log("UserCreated",saved);
         
-        return {
+        /* return {
             nombre:saved.nombre,
             correo:saved.correo,
             edad:saved.edad,
             contrasena:undefined as any
-        };
+        }; */
+
+        return saved;
     }
 
 

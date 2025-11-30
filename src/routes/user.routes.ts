@@ -48,4 +48,6 @@ router.post('/loginUser',userController.loginUser);
 
 router.get('/getUserById/:id',userController.getUserById);
 
+router.get('/getAllUsers',userController.getAllUsers);
+
 export default router;

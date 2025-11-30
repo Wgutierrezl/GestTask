@@ -4,7 +4,8 @@ import { UserDTO } from "../../models/DTOs/UserDTO";
 import { UserInfoDTO } from "../../models/DTOs/UserInfoDTO";
 
 export interface IUserService{
-    createUser(user:UserDTO): Promise<UserDTO>;
+    createUser(user:UserDTO): Promise<UserInfoDTO>;
     login(loginDTO:LoginDTO): Promise<SessionDTO | null>;
     getUserById(id:string): Promise<UserInfoDTO | null>;
+    getAllUsers() : Promise<UserInfoDTO | null>;
 }

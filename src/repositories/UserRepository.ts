@@ -5,6 +5,9 @@ import { UserEntity } from "../models/entities/UserEntity";
 
 
 export class UserRepository implements IUserRepository{
+    async getAllUsers(): Promise<any> {
+        return await User.find();
+    }
 
 
     async createUser(user: UserEntity): Promise<any> {
