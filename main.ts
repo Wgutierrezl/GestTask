@@ -6,6 +6,7 @@ import cors from 'cors';
 import connectDB from './src/config/config-mongodb';
 import UserRoutes from './src/routes/user.routes'
 import PipeRoutes from './src/routes/pipeline.routes';
+import TaskRoutes from './src/routes/task.routes';
 import { swaggerSetUp } from './src/config/swagger-config';
 
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,8 @@ async function start() {
 		app.use('/users',UserRoutes)
 
 		app.use('/pipelines',PipeRoutes);
+
+		app.use('/tasks', TaskRoutes);
 
 		// Health check (útil para comprobar que el servidor responde)
 		app.get('/health', (_req, res) => {

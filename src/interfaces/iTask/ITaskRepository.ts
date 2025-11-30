@@ -1,0 +1,8 @@
+import { TaskEntity } from "../../models/entities/TaskEntity";
+
+export interface ITaskRepository{
+    createTask(data:TaskEntity) : Promise<any>;
+    getAllTaskByPipelineId(id:string) : Promise<TaskEntity[]>
+    getAllTaskByUserId(id:string) : Promise<TaskEntity[]>;
+    getTaskById(id:string) : Promise<TaskEntity | null>;
+}
