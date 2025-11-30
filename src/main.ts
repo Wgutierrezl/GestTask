@@ -3,11 +3,11 @@ dotenv.config();
 
 import express, { Application } from 'express';
 import cors from 'cors';
-import connectDB from './src/config/config-mongodb';
-import UserRoutes from './src/routes/user.routes'
-import PipeRoutes from './src/routes/pipeline.routes';
-import TaskRoutes from './src/routes/task.routes';
-import { swaggerSetUp } from './src/config/swagger-config';
+import connectDB from './config/config-mongodb';
+import UserRoutes from './routes/user.routes'
+import PipeRoutes from './routes/pipeline.routes';
+import TaskRoutes from './routes/task.routes';
+import { swaggerSetUp } from './config/swagger-config';
 
 const PORT = process.env.PORT || 3000;
 
