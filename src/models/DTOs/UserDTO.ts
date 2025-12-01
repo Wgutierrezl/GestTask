@@ -3,4 +3,5 @@ export class UserDTO{
     correo!:string;
     edad!:number;
     contrasena!:string;
+    rol!:string
 }

@@ -38,6 +38,7 @@ export class UserService implements IUserService{
         userData.correo=user.correo;
         userData.edad=user.edad;
         userData.contrasena=passwordHash;
+        userData.rol=user.rol;
 
 
         const saved=await this._repo.createUser(userData);
@@ -90,7 +91,8 @@ export class UserService implements IUserService{
             nombre:user.nombre,
             correo:user.correo,
             edad:user.edad,
-            contrasena:undefined as any
+            contrasena:undefined as any,
+            rol:user.rol
         };
 
     }

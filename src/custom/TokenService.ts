@@ -9,6 +9,7 @@ export class TokenService implements ITokenService {
       id: user._id,
       email: user.correo,
       name: user.nombre,
+      role:user.rol
       /* role:user.rol ?? 'Default' */
     };
 

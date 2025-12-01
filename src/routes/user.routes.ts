@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
+import { authMiddleware } from "../middleware/genericMiddleware";
 
 const router=Router();
 const userController=new UserController();
@@ -42,12 +43,12 @@ const userController=new UserController();
  *       500:
  *         description: Error al registrar usuario
  */
-router.post('/registerUser',userController.createUser);
+router.post('/registerUser',authMiddleware(['admin']),userController.createUser);
 
 router.post('/loginUser',userController.loginUser);
 
-router.get('/getUserById/:id',userController.getUserById);
+router.get('/getUserById/:id',authMiddleware(['admin','usuario']),userController.getUserById);
 
-router.get('/getAllUsers',userController.getAllUsers);
+router.get('/getAllUsers',authMiddleware(['admin']),userController.getAllUsers);
 
 export default router;

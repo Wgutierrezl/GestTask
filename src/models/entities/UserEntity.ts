@@ -4,4 +4,5 @@ export class UserEntity {
     edad!: number
     contrasena!: string
     fechaRegistro: Date = new Date()
+    rol!: string
 }
