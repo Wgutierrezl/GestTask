@@ -9,4 +9,5 @@ export class TaskEntity{
     fechaCreacion:Date=new Date()
     fechaLimite!: Date
     fechaFinalizacion?: Date;
+    tableroId!:string
 }

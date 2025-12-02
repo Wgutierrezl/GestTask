@@ -12,7 +12,8 @@ const tareaSchema = new Schema({
     estado: { type: String, enum: ['Activo', 'Inactivo'], default: 'Activo' },
     fechaCreacion: { type: Date, default: Date.now },
     fechaLimite: { type: Date, required: false },
-    fechaFinalizacion: { type: Date, required: false }
+    fechaFinalizacion: { type: Date, required: false },
+    tableroId : {type: Types.ObjectId, ref: 'tableros' , required: true}
 });
 
 export const Tarea = model('tareas', tareaSchema);

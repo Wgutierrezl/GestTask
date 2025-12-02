@@ -7,4 +7,5 @@ export class TaskDTO{
     priodidad!: string
     fechaLimite!: Date
     fechaFinalizacion?: Date;
+    tableroId!:string
 }

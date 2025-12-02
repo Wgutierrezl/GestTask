@@ -29,6 +29,8 @@ export class TaskService implements ITaskService{
             task.fechaFinalizacion=data.fechaFinalizacion;
         }
 
+        task.tableroId=data.tableroId;
+
 
         const taskCreated=await this._repo.createTask(task);
         console.log(taskCreated);
