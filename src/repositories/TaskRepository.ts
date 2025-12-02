@@ -1,9 +1,16 @@
+import mongoose from "mongoose";
 import { ITaskRepository } from "../interfaces/iTask/ITaskRepository";
 import { TaskUpdateDTO } from "../models/DTOs/TaskUpdateDTO";
 import { Tarea } from "../models/entities/Tareas";
 import { TaskEntity } from "../models/entities/TaskEntity";
 
 export class TaskRepository implements ITaskRepository{
+
+    //METHOD TO DELETE A TASK
+    async deleteTask(id: string): Promise<any> {
+        const result=await Tarea.deleteOne({_id:new mongoose.Types.ObjectId(id)});
+        return result.deletedCount>0;
+    }
 
     //METHOD TO UPDATE A TASK
     async updateTask(data: TaskUpdateDTO): Promise<any> {

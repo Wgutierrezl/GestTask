@@ -12,6 +12,21 @@ export class TaskService implements ITaskService{
         this._repo=repo;
     }
 
+    //METHOD TO DELETE A TASK
+    async deleteTask(id: string): Promise<any | null> {
+        const task=await this._repo.getTaskById(id);
+        if(task==null){
+            return null;
+        }
+
+        const deleted=await this._repo.deleteTask(id);
+        if(!deleted){
+            throw new Error('no hemos logrado eliminar la tarea');
+        }
+
+        return deleted;
+    }
+
     //METHOD TO UPDATE A TASK
     async updateTask(id: string, data: TaskDTO): Promise<TaskUpdateDTO | null> {
         let task=await this._repo.getTaskById(id);

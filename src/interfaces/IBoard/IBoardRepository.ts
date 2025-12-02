@@ -8,5 +8,6 @@ export interface IBoardRepository{
     /* getBoardsByPipelineId(pipelineId: string) : Promise<any[]>; */
     getBoardById(id:string) : Promise<any | null>;
     updateBoards(data:BoardUpdateDTO) : Promise<any>;
+    deleteBoardById(id: string) : Promise<any>;
 
 }

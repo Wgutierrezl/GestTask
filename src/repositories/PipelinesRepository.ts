@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IPipelinesRepository } from "../interfaces/iPipelines/IPipelinesRepository";
 import { pipelinesDTO } from "../models/DTOs/PipelinesDTO";
 import { PipeUpdateDTO } from "../models/DTOs/PipeUpdateDTO";
@@ -5,6 +6,11 @@ import { Pipeline } from "../models/entities/Pipelines";
 import { PipelinesEntity } from "../models/entities/PipelinesEntity";
 
 export class PipelinesRepository implements IPipelinesRepository{
+    
+    async deletePipelinesById(id: string): Promise<any> {
+        const result=await Pipeline.deleteOne({_id:new mongoose.Types.ObjectId(id)});
+        return result.deletedCount>0;
+    }
     
     async updatePipelines(data: PipeUpdateDTO): Promise<any> {
         return await Pipeline.findByIdAndUpdate(data._id, data , {new:true});

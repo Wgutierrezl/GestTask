@@ -13,5 +13,7 @@ router.get('/getBoardById/:id',boardController.getBoardById);
 
 router.put('/updateBoard/:id',boardController.updateBoard);
 
+router.delete('/deleteBoardById/:id',boardController.deleteBoard);
+
 
 export default router;

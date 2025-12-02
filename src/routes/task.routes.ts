@@ -21,4 +21,7 @@ router.get('/getAllTaskByUserId/:userId',authMiddleware(['admin','usuario']),tas
 router.get('/getTaskById/:id',authMiddleware(['admin','usuario']),taskController.getTaskById);
 
 
+router.delete('/deleteTaskById/:id',taskController.deleteTask);
+
+
 export default router;

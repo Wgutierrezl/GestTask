@@ -16,5 +16,7 @@ router.get('/getPipelineById/:id',authMiddleware(['admin','usuario']),pipeContro
 
 router.get('/getPipelinesByOwnerId/:userId',authMiddleware(['admin','usuario']) ,pipeController.getPipelineByOwnerId);
 
+router.delete('/deletePipelinesById/:id',pipeController.deletePipelineId);
+
 
 export default router;

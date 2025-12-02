@@ -8,4 +8,5 @@ export interface ITaskService{
     getTaskByUserId(userId:string) : Promise<TaskEntity[] | null>;
     getTaskById(id:string) : Promise<TaskEntity | null>;
     updateTask(id:string, data:TaskDTO) : Promise<TaskUpdateDTO | null>;
+    deleteTask(id:string) : Promise<any | null>;
 }

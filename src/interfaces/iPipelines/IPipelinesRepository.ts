@@ -8,4 +8,5 @@ export interface IPipelinesRepository{
     getAllPipelines(): Promise<PipelinesEntity[] | null>; 
     getPipelinesByOwnerId(userId:string): Promise<PipelinesEntity[] | null>;
     updatePipelines(data:PipeUpdateDTO) : Promise<any>;
+    deletePipelinesById(id:string) : Promise<any>;
 }

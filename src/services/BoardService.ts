@@ -13,6 +13,20 @@ export class BoardService implements IBoardService{
     constructor(repo:IBoardRepository){
         this._repo=repo;
     }
+    
+    async deleteBoardById(id: string): Promise<any | null> {
+        const board=await this._repo.getBoardById(id);
+        if(board==null){
+            return null;
+        }
+
+        const boardDeleted=await this._repo.deleteBoardById(id);
+        if(!boardDeleted){
+            throw new Error('no hemos logrado borrar el tablero');
+        }
+
+        return boardDeleted;
+    }
 
 
     async createBoard(data: BoardDTO): Promise<BoardInfoDTO | null> {

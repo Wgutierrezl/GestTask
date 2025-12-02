@@ -117,4 +117,25 @@ export class PipelineController{
             return res.status(500).json({ message: `ha ocurrido un error inesperado ${error}` });
         }
     }
+
+    deletePipelineId=async(req: Request, res:Response) : Promise<Response> => {
+        try{
+            const {id}=req.params;
+            if(!id){
+                return res.status(400).json({message:"debes de digitar el id"});
+            }
+
+
+            const deleted=await this._service.deletePipelinesById(id);
+            if(!deleted){
+                return res.status(400).json({message:'no hemos logrado borrar el pipeline'});
+            }
+
+            return res.status(204).json({message:'pipeline eliminado correctamente'});
+
+        }catch(error:any){
+            console.error(error);
+            return res.status(500).json({ message: `ha ocurrido un error inesperado ${error}` });
+        }
+    }
 }

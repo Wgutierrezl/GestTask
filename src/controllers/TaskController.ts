@@ -3,6 +3,7 @@ import { ITaskService } from "../interfaces/iTask/ITaskService";
 import { TaskRepository } from "../repositories/TaskRepository";
 import { TaskService } from "../services/TaskService";
 import { TaskDTO } from "../models/DTOs/TaskDTO";
+import { promises } from "dns";
 
 export class TaskController{
 
@@ -114,6 +115,27 @@ export class TaskController{
             }
 
             return res.status(200).json(response);
+
+
+        }catch(error:any){
+            console.log(error);
+            return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+    deleteTask=async(req: Request, res:Response) : Promise<Response> => {
+        try{
+            const {id}=req.params;
+            if(!id){
+                return res.status(400).json({message:'debes de diligenciar el id'});
+            }
+
+            const deleted=await this._service.deleteTask(id);
+            if(!deleted){
+                return res.status(400).json({message:'no hemos logrado eliminar la tarea'});
+            }
+
+            return res.status(204).json({message:'tarea eliminada correctamente'});
 
 
         }catch(error:any){

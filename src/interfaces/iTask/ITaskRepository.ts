@@ -7,4 +7,5 @@ export interface ITaskRepository{
     getAllTaskByUserId(id:string) : Promise<TaskEntity[]>;
     getTaskById(id:string) : Promise<any | null>;
     updateTask(data:TaskUpdateDTO) : Promise<any>;
+    deleteTask(id:string) : Promise<any>;
 }

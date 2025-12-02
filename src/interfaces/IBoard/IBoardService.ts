@@ -6,4 +6,5 @@ export interface IBoardService{
     getAllBoardByOnwnerId(userId: string) : Promise<BoardInfoDTO[] | null>;
     getBoardById(id:string) : Promise<BoardInfoDTO | null>;
     updateBoard(id:string, data:BoardDTO) : Promise<BoardInfoDTO | null>;
+    deleteBoardById(id:string) : Promise<any | null>;
 }

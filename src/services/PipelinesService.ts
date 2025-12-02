@@ -11,6 +11,24 @@ export class PipelinesService implements IPipelinesService{
     constructor(repo:IPipelinesRepository){
         this._repo=repo;
     }
+
+    async deletePipelinesById(id: string): Promise<any> {
+        const pipeline=await this._repo.getPipelinesById(id);
+        if(pipeline==null){
+            return null;
+        }
+
+        const deleted=await this._repo.deletePipelinesById(id);
+        if(!deleted){
+            throw new Error('no hemos logrado eliminar el pipeline');
+        }
+
+        return deleted;
+
+
+    }
+
+    
     async updatePipelines(id: string, data: pipelinesDTO): Promise<PipeUpdateDTO | null> {
         let pipe=await this._repo.getPipelinesById(id);
         if(pipe==null){
