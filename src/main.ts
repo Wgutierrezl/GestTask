@@ -7,6 +7,7 @@ import connectDB from './config/config-mongodb';
 import UserRoutes from './routes/user.routes'
 import PipeRoutes from './routes/pipeline.routes';
 import TaskRoutes from './routes/task.routes';
+import BoardRouter from './routes/board.routes';
 import { swaggerSetUp } from './config/swagger-config';
 
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,8 @@ async function start() {
 		app.use(express.json());
 
 		app.use('/users',UserRoutes)
+
+		app.use('/boards',BoardRouter);
 
 		app.use('/pipelines',PipeRoutes);
 
