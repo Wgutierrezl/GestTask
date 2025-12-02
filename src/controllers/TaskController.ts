@@ -32,6 +32,33 @@ export class TaskController{
     }
 
 
+    updateTask=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {id}=req.params;
+            const dto:TaskDTO=req.body;
+
+            if(!id){
+                return res.status(400).json({message:'debes de diligenciar el id'});
+            }
+
+            if(!dto){
+                return res.status(400).json({message:'debes de diligenciar el objeto'});
+            }
+
+            const response=await this._service.updateTask(id,dto);
+            if(response==null){
+                return res.status(400).json({message:'no hemos logrado actualizar la informacion de la task'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error){
+            console.log(error);
+            return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+
     getTaskByPipelineId=async(req:Request, res:Response) : Promise<Response> => {
         try{
             const {pipelineId}=req.params;

@@ -9,6 +9,9 @@ const taskController=new TaskController();
 router.post('/createTask',authMiddleware(['admin','usuario']),taskController.createNewTask);
 
 
+router.put('/updateTask/:id',taskController.updateTask);
+
+
 router.get('/getAllTaskByPipeId/:pipelineId',authMiddleware(['admin','usuario']),taskController.getTaskByPipelineId);
 
 

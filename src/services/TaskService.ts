@@ -1,6 +1,7 @@
 import { ITaskRepository } from "../interfaces/iTask/ITaskRepository";
 import { ITaskService } from "../interfaces/iTask/ITaskService";
 import { TaskDTO } from "../models/DTOs/TaskDTO";
+import { TaskUpdateDTO } from "../models/DTOs/TaskUpdateDTO";
 import { TaskEntity } from "../models/entities/TaskEntity";
 
 export class TaskService implements ITaskService{
@@ -9,6 +10,47 @@ export class TaskService implements ITaskService{
 
     constructor(repo:ITaskRepository){
         this._repo=repo;
+    }
+
+    //METHOD TO UPDATE A TASK
+    async updateTask(id: string, data: TaskDTO): Promise<TaskUpdateDTO | null> {
+        let task=await this._repo.getTaskById(id);
+        console.log(task);
+        if(task==null){
+            return null;
+        }
+
+        console.log(`id capturado de la tarea ${task._id}`);
+        task.titulo=data.titulo;
+        task.descripcion=data.descripcion;
+        
+        if(data.asignadoA!=null){
+            task.asignadoA=data.asignadoA;
+        }
+
+        if(data.etapaId!=null){
+            task.etapaId=data.etapaId;
+        }
+
+        if(data.pipelineId!=null){
+            task.pipelineId=data.pipelineId;
+        }
+
+        if(data.tableroId!=null){
+            task.tableroId=data.tableroId;
+        }
+
+        task.priodidad=data.priodidad;
+
+        const taskUpdated=await this._repo.updateTask(task);
+        if(taskUpdated==null){
+            throw new Error('no hemos logrado actualizar la tarea');
+        }
+
+        return this.fillObjectTaskInfo(taskUpdated);
+        
+
+
     }
 
     //METHOD TO CREATE A NEW TASK
@@ -73,6 +115,22 @@ export class TaskService implements ITaskService{
         }
 
         return response;
+    }
+
+    //METHOD TO COMPLETE THE ATTRIBUTES BY TASK
+    fillObjectTaskInfo(data:any) : TaskUpdateDTO {
+        return {
+            _id:data._id,
+            titulo:data.titulo,
+            descripcion: data.descripcion,
+            pipelineId: data.pipelineId,
+            etapaId: data.etapaId,
+            asignadoA: data.asignadoA,
+            priodidad: data.prioridad,
+            fechaLimite: data.fechaLimite,
+            fechaFinalizacion: data.fechaFinalizacion
+        }
+
     }
     
 }
