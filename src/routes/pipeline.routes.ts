@@ -8,6 +8,8 @@ const pipeController=new PipelineController();
 
 router.post('/createPipelines',authMiddleware(['admin','usuario']),pipeController.createPipelines);
 
+router.put('/updatePipeline/:id', pipeController.updatePipeline);
+
 router.get('/getAllPipelines',authMiddleware(['admin']),pipeController.getAllPipelines);
 
 router.get('/getPipelineById/:id',authMiddleware(['admin','usuario']),pipeController.getPipelineById);

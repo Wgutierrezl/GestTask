@@ -91,4 +91,30 @@ export class PipelineController{
             return res.status(500).json({ message: "Aun no hay pipelines" });
         }
     }
+
+    updatePipeline=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {id}=req.params;
+            const dto:pipelinesDTO=req.body;
+
+            if(!id){
+                return res.status(400).json({message:'debes de diligenciar el id'});
+            }
+
+            if(!dto){
+                return res.status(400).json({message:'debes de diligenciar el objeto'});
+            }
+
+            const response=await this._service.updatePipelines(id,dto);
+            if(response==null){
+                return res.status(400).json({message:'no hemos logrado actualizar el pipeline'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            console.error(error);
+            return res.status(500).json({ message: `ha ocurrido un error inesperado ${error}` });
+        }
+    }
 }

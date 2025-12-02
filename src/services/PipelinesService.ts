@@ -1,6 +1,7 @@
 import { IPipelinesRepository } from "../interfaces/iPipelines/IPipelinesRepository";
 import { IPipelinesService } from "../interfaces/iPipelines/IPipelinesService";
 import { pipelinesDTO } from "../models/DTOs/PipelinesDTO";
+import { PipeUpdateDTO } from "../models/DTOs/PipeUpdateDTO";
 import { PipelinesEntity } from "../models/entities/PipelinesEntity";
 
 export class PipelinesService implements IPipelinesService{
@@ -9,6 +10,29 @@ export class PipelinesService implements IPipelinesService{
 
     constructor(repo:IPipelinesRepository){
         this._repo=repo;
+    }
+    async updatePipelines(id: string, data: pipelinesDTO): Promise<PipeUpdateDTO | null> {
+        let pipe=await this._repo.getPipelinesById(id);
+        if(pipe==null){
+            throw new Error('no encontramos el pipeline que tratas de actualizar');
+        }
+
+        pipe.nombre=data.nombre;
+        pipe.descripcion=data.descripcion;
+        pipe.estado=data.estado;
+        pipe.ownerId=data.ownerId;
+        
+        if(data.etapas && data.etapas.length>0){
+            pipe.etapas=data.etapas;
+        }
+
+        const pipelineUpdated=await this._repo.updatePipelines(pipe);
+        if(pipelineUpdated==null){
+            throw new Error('no hemos logrado actualizar el pipeline');
+        }
+
+        return this.fillAttributesPipeline(pipelineUpdated);
+
     }
 
 
@@ -58,6 +82,18 @@ export class PipelinesService implements IPipelinesService{
         }
 
         return response;
+    }
+
+
+    fillAttributesPipeline(data:any) : PipeUpdateDTO {
+        return {
+            _id:data._id,
+            nombre:data.nombre,
+            descripcion:data.descripcion,
+            ownerId: data.ownerId,
+            estado: data.estado,
+            etapas: data.etapas ?? []
+        };
     }
 
 }
