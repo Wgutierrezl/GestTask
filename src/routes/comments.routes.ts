@@ -9,5 +9,7 @@ const commentController=new CommentsController();
 
 router.post('/createComment',upload.array("archivos"),commentController.createComment);
 
+router.get('/downloadFile/:commentId/file/:fileId',commentController.downloadFileByCommentId);
+
 
 export default router;

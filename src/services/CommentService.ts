@@ -6,6 +6,7 @@ import { CommentsDTO, CreateCommentDTO } from "../models/DTOs/CommentsDTO";
 import { CommentsInfo } from "../models/DTOs/CommentsInfo";
 import { CommentsEntity } from "../models/entities/CommentsEntity";
 import { B2Service } from "./B2Service";
+import { SessionFileDTO } from "../models/DTOs/SessionFileDTO";
 
 export class CommentService implements ICommentsService{
 
@@ -17,6 +18,33 @@ export class CommentService implements ICommentsService{
         this._b2=b2;
     }
 
+    //METHOD TO GET AND URL ABOUT THE FILE THAT STAY IN THE BUCKET B2
+    async downloadFile(commentId: string, fileId: string): Promise<SessionFileDTO | null> {
+        const comment=await this._repo.getCommentById(commentId);
+        console.log(`accediendo a los comentarios mediante el id ${commentId} object ${comment.data}`);
+        if(!comment){
+            throw new Error('No existe el comentario que deseas buscas');
+        }
+
+        const file=comment.archivos.find((a: { _id: { toString: () => string; }; })=> a._id.toString()==fileId.toString());
+
+        if(!file){
+            throw new Error('El archivo que tratas de buscar dentro de la tarea no se encuentra');
+        }
+        console.log(`archivo encontrado ${file.nombre} ; url ${file.url}`);
+
+        const url=await this._b2.getUriFile(file.url);
+        console.log(`esta es la url temporal ${url}`);
+
+        return {
+            userId:comment.usuarioId,
+            url:url
+        };
+
+    }
+
+
+    //METHOD TO CREATE A COMMENT AND INTEGRATION WITH B2 SERVICES : BACK BLAZE
     async createComment(data: CreateCommentDTO): Promise<CommentsInfo | null> {
 
         // 1. Validación básica
@@ -93,17 +121,33 @@ export class CommentService implements ICommentsService{
     }
 
 
-    getAllCommentsByTaskId(id: string): Promise<CommentsInfo[] | null> {
-        throw new Error("Method not implemented.");
+    //METHOD TO GET ALL COMMENTS BY TASK ID
+    async getAllCommentsByTaskId(id: string): Promise<CommentsInfo[] | null> {
+        const comment=await this._repo.getAllCommentsByTaskId(id);
+        if(comment==null || comment.length==0){
+            return null;
+        }
+
+        return comment;
     }
+
+
     updateCommentsById(id: string, data: CreateCommentDTO): Promise<CommentsInfo | null> {
         throw new Error("Method not implemented.");
     }
-    getCommentById(id: string): Promise<CommentsInfo | null> {
-        throw new Error("Method not implemented.");
+
+    //METHOD TO GET ONE COMMENT BY ID
+    async getCommentById(id: string): Promise<CommentsInfo | null> {
+        const comment=await this._repo.getCommentById(id);
+        if(comment==null){
+            return null;
+        }
+
+        return this.fillComments(comment);
     }
 
 
+    //METHOD TO FILL THE OBJECT COMMENTSINFO
     private fillComments(data:any) : CommentsInfo {
         return {
             _id:data._id,

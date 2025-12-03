@@ -19,6 +19,7 @@ export class CommentsController{
     }
 
 
+    //ENDPOINT TO CREATE A COMMENT
     createComment=async(req:Request, res:Response) : Promise<Response> => {
         try{
             const dto:CreateCommentDTO={
@@ -71,6 +72,31 @@ export class CommentsController{
 
         }catch(error:any){
             return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+
+    //ENDPOINT TO DOWNLOAD FILE BY COMMENT_ID AND FILE_ID
+    downloadFileByCommentId=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {commentId}=req.params
+            const {fileId}=req.params;
+            if(!commentId || !fileId){
+                return res.status(400).json({message:'debes de diligenciar el id para ambos casos'});
+            }
+
+            const response=await this._service.downloadFile(commentId,fileId);
+
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado descargar el archivo de esta tarea'});
+            }
+
+            return res.status(200).json(response);
+
+            
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+
         }
     }
 
