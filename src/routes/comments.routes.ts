@@ -13,5 +13,9 @@ router.get('/downloadFile/:commentId/file/:fileId',commentController.downloadFil
 
 router.delete('/deleteCommentById/:id',commentController.deleteComment);
 
+router.get('/getAllCommentsByTaskId/:taskId',commentController.getAllCommentsByTaskId);
+
+router.get('/getCommentById/:id',commentController.getCommentById);
+
 
 export default router;

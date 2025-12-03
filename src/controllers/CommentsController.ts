@@ -121,4 +121,45 @@ export class CommentsController{
         }
     }
 
+
+    //ENDPOINT TO GET ALL COMMENTS BY TASK ID
+    getAllCommentsByTaskId=async(req: Request, res:Response) : Promise<Response> =>{
+        try{
+            const {taskId}=req.params;
+            if(!taskId){
+                return res.status(400).json({message:'debes de diligenciar el ID'});
+            }
+
+            const response=await this._service.getAllCommentsByTaskId(taskId);
+            if(!response){
+                return res.status(400).json({message:'aun no hay comentarios para esa tarea'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});  
+        }
+    }
+
+    //METHOD TO GET COMMENT BY ID
+    getCommentById=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {id}=req.params;
+            if(!id){
+                return res.status(400).json({message:'debes de diligenciar el ID'});
+            }
+
+            const comment=await this._service.getCommentById(id);
+            if(!comment){
+                return res.status(404).json({message:'no hemos encontrado el comentario que buscas'});
+            }
+
+            return res.status(200).json(comment);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
 }

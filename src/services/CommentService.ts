@@ -157,6 +157,7 @@ export class CommentService implements ICommentsService{
     //METHOD TO GET ALL COMMENTS BY TASK ID
     async getAllCommentsByTaskId(id: string): Promise<CommentsInfo[] | null> {
         const comment=await this._repo.getAllCommentsByTaskId(id);
+        console.log(`comentarios encontrados`,comment)
         if(comment==null || comment.length==0){
             return null;
         }
