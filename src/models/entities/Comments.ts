@@ -15,7 +15,7 @@ const comentarioSchema = new Schema({
     usuarioId: { type: Types.ObjectId, ref: 'usuarios', required: true },
     mensaje: { type: String, required: true },
 
-    archivos: [{type: [archivosSchema], default : [] }],
+    archivos: {type: [archivosSchema], default : [] },
 
     estado: {
         type: String,

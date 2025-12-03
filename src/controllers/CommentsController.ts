@@ -38,6 +38,30 @@ export class CommentsController{
             }
 
 
+
+            // ─────────────────────────────────────
+                // NORMALIZAR req.files (FIX DEFINITIVO)
+            // ─────────────────────────────────────
+            /* let normalizedFiles: Express.Multer.File[] = [];
+
+            if (req.files && Array.isArray(req.files)) {
+                req.files.forEach((item) => {
+                    if (Array.isArray(item)) {
+                        normalizedFiles.push(...item);
+                    } else {
+                        normalizedFiles.push(item);
+                    }
+                });
+            }
+
+            // Mapear archivos al DTO
+            dto.archivos = normalizedFiles.map(file => ({
+                originalName: file.originalname,
+                buffer: file.buffer,
+                size: file.size
+            })); */
+
+
             const commentCreated=await this._service.createComment(dto);
             if(commentCreated==null){
                 return res.status(400).json({message:'no hemos logrado crear el comentario'});
