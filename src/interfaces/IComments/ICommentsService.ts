@@ -8,4 +8,5 @@ export interface ICommentsService{
     updateCommentsById(id:string, data:CreateCommentDTO) : Promise<CommentsInfo | null>;
     getCommentById(id:string) : Promise<CommentsInfo | null>;
     downloadFile(commentId:string, fileId:string) : Promise<SessionFileDTO | null>;
+    deleteComment(id:string) : Promise<boolean | null>;
 }

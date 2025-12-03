@@ -100,4 +100,25 @@ export class CommentsController{
         }
     }
 
+
+    //ENDPOINT TO DELETE COMMENT AND THEIR FILES BY B2
+    deleteComment=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {id}=req.params;
+            if(!id){
+                return res.status(400).json({message:'debes de digitar el id'});
+            }
+
+            const deleted=await this._service.deleteComment(id);
+            if(!deleted){
+                return res.status(400).json({message:'no hemos logrado eliminar el comentario'});
+            }
+
+            return res.status(200).json({message:'registro eliminado correctamente',success:deleted});
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
 }

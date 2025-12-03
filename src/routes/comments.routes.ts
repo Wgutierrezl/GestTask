@@ -11,5 +11,7 @@ router.post('/createComment',upload.array("archivos"),commentController.createCo
 
 router.get('/downloadFile/:commentId/file/:fileId',commentController.downloadFileByCommentId);
 
+router.delete('/deleteCommentById/:id',commentController.deleteComment);
+
 
 export default router;

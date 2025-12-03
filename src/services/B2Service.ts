@@ -19,6 +19,34 @@ export class B2Service implements IB2Service{
         this.bucketName=process.env.BUCKET_NAME!;
         
     }
+    async deleteFile(fileName: string): Promise<void> {
+        await this.authorize();
+
+
+        // 2. Buscar el archivo por nombre para obtener fileId
+        const fileList = await this.b2.listFileNames({
+            bucketId: this.bucketId,
+            prefix: fileName,
+            maxFileCount: 1,
+            startFileName: fileName,
+            delimiter: '',
+        });
+
+        if (!fileList.data.files.length) {
+            throw new Error(`El archivo ${fileName} no existe en B2`);
+        }
+
+        const file=fileList.data.files[0];
+
+        // 3. Borrar versión del archivo
+        await this.b2.deleteFileVersion({
+            fileId: file.fileId,
+            fileName: file.fileName
+        });
+
+        console.log(`Archivo eliminado: ${fileName}`);
+
+    }
 
     private async authorize(){
         this._authorice=await this.b2.authorize();

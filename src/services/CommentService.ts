@@ -18,6 +18,39 @@ export class CommentService implements ICommentsService{
         this._b2=b2;
     }
 
+    //METHOD TO DELETE COMMENT BY ID
+    async deleteComment(id: string): Promise<boolean | null> {
+        const response=await this._repo.getCommentById(id);
+        if(!response){
+            throw new Error('no existe el comentario que deseas borrar');
+        }
+
+        try{
+            // 2. Eliminar archivos en Backblaze
+            for(const file of response.archivos){
+                console.log(`accediento a el nombre del archivo ${file.nombre}`);
+                await this._b2.deleteFile(file.nombre);
+                console.log('archivo eliminado hasta este momento');
+            }
+            
+        }catch(error:any){
+            console.error("Error eliminando archivos del comentario:", error);
+            // Puedes decidir si lanzar el error o seguir eliminando el comentario en BD
+            throw new Error("Error eliminando archivos del almacenamiento");
+
+        }
+
+
+        const deleteComment=await this._repo.deleteCommentById(response._id);
+        console.log(`verificacion de eliminacion del comentario ${deleteComment}`);
+        if(!deleteComment){
+            throw new Error('no hemos logrado eliminar el comentario de la base de datos');
+        }
+
+        return deleteComment;
+
+    }
+
     //METHOD TO GET AND URL ABOUT THE FILE THAT STAY IN THE BUCKET B2
     async downloadFile(commentId: string, fileId: string): Promise<SessionFileDTO | null> {
         const comment=await this._repo.getCommentById(commentId);

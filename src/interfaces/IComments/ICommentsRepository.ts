@@ -6,4 +6,5 @@ export interface ICommentsRepository{
     getAllCommentsByTaskId(id:string) : Promise<any[]>;
     updateCommentsById(data:CommentUpdateDTO) : Promise<any>;
     getCommentById(id:string) : Promise<any>;
+    deleteCommentById(id:string) : Promise<any>;
 }
