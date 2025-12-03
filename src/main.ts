@@ -8,6 +8,7 @@ import UserRoutes from './routes/user.routes'
 import PipeRoutes from './routes/pipeline.routes';
 import TaskRoutes from './routes/task.routes';
 import BoardRouter from './routes/board.routes';
+import CommentRouter from './routes/comments.routes'
 import { swaggerSetUp } from './config/swagger-config';
 
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,8 @@ async function start() {
 		app.use('/pipelines',PipeRoutes);
 
 		app.use('/tasks', TaskRoutes);
+
+		app.use('/comments',CommentRouter);
 
 		// Health check (útil para comprobar que el servidor responde)
 		app.get('/health', (_req, res) => {
