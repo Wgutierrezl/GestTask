@@ -171,11 +171,18 @@ export class CommentService implements ICommentsService{
     async updateCommentsById(id: string, data: UpdateCommentFileDTO): Promise<CommentsInfo | null> {
         const comment=await this._repo.getCommentById(id);
 
-        const commentUpdated=new CommentUpdateDTO();
-
         if(comment==null){
             return null;
         }
+
+
+        //WE CHANGE THE MESSAGE BEACUSE IS THE EASIEST ATTRIBUTE TO CHANGE
+        if(data.mensaje!==undefined){
+            comment.mensaje=data.mensaje;
+        }
+        
+
+        const commentUpdated=new CommentUpdateDTO();
 
         //WE ASK IF THE USER SEND FILES OR THE ID THE FILE ID
         /* if(data.archivosEliminar && data.archivosEliminar?.length>0){
