@@ -136,6 +136,9 @@ export class CommentService implements ICommentsService{
             
         }
 
+        //WE UPLOAD THE FILES INTO THE ARRAY 
+        /* finalFiles=await this.uploadNewFileIntoB2ByUpdate(finalFiles, data); */
+
         
         //WE FILL THE REST ATTRIBUTES
         comment.tareaId=data.tareaId;
@@ -144,7 +147,7 @@ export class CommentService implements ICommentsService{
         comment.estado='activo';
         comment.fechaCreacion=new Date();
         comment.fechaEdicion=new Date();
-        comment.archivos=finalFiles;
+        comment.archivos=finalFiles ?? [];
 
         const commentCreated=await this._repo.createComment(comment);
         if(commentCreated==null){
@@ -263,13 +266,22 @@ export class CommentService implements ICommentsService{
         try{
             await this.deleteFilesIntoB2AndArray(comment, data);
 
-            const result=await this.uploadNewFileIntoB2ByUpdate(comment, data);
+            /* const result=await this.uploadNewFileIntoB2ByUpdate(comment, data); */
 
 
-            commentUpdated._id=result._id;
+            /* commentUpdated._id=result._id;
             commentUpdated.mensaje=result.mensaje;
             commentUpdated.tareaId=result.tareaId;
-            commentUpdated.archivos=result.archivos ?? [];
+            commentUpdated.archivos=result.archivos ?? []; */
+
+
+            const result=await this.uploadNewFileIntoB2ByUpdate(comment.archivos, data);
+
+            commentUpdated._id=comment._id;
+            commentUpdated.mensaje=comment.mensaje ?? 'no message';
+            commentUpdated.tareaId=comment.tareaId;
+            commentUpdated.archivos=result ?? [];
+            
 
 
             const commentUploaded=await this._repo.updateCommentsById(commentUpdated);
@@ -354,7 +366,7 @@ export class CommentService implements ICommentsService{
     }
 
     //METHOD TO UPLOAD THE FILE INTO THE BUCKET OF B2 AND INTO THE ARRAY OF COMMENT BY THE URL
-    private async uploadNewFileIntoB2ByUpdate(comment:any, data:UpdateCommentFileDTO) : Promise<any> {
+    private async uploadNewFileIntoB2ByUpdate(comment:any[], data:UpdateCommentFileDTO) : Promise<any> {
         //NOW IN THIS SECTION ASK IF THE USER UPLOAD NEW FILES INTO THE COMMENT
         if(data.archivosCargados && data.archivosCargados.length>0){
 
@@ -381,14 +393,20 @@ export class CommentService implements ICommentsService{
                     console.log(`nombre del archivo generado dentro del bucket, guardamos solo la ruta ${fileName}`);
 
                     //Montamos las url dadas y los nombres de los archivos
-                    comment.archivos.push({
+                    /* comment.archivos.push({
+                        nombre: fileName,
+                        url:fileName,
+                        tamaño: file.size ? file.size.toString() :'0'
+                    }); */
+
+                    comment.push({
                         nombre: fileName,
                         url:fileName,
                         tamaño: file.size ? file.size.toString() :'0'
                     });
 
-                    console.log(`ahora miramos como queda guardado dentro de la lista que nos guarda las rutas ${comment.archivos}`);
-
+                    /* console.log(`ahora miramos como queda guardado dentro de la lista que nos guarda las rutas ${comment.archivos}`); */
+                    console.log(`ahora miramos como queda guardado dentro de la lista que nos guarda las rutas ${comment}`);
                 }
                 console.log('aqui termina el ciclo for');
 
