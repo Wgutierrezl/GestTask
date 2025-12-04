@@ -2,7 +2,7 @@ import { url } from "inspector";
 import { IB2Service } from "../interfaces/IB2/IB2Service";
 import { ICommentsRepository } from "../interfaces/IComments/ICommentsRepository";
 import { ICommentsService } from "../interfaces/IComments/ICommentsService";
-import { CommentsDTO, CreateCommentDTO } from "../models/DTOs/CommentsDTO";
+import { CommentsDTO, CreateCommentDTO, FileInputDTO } from "../models/DTOs/CommentsDTO";
 import { CommentsInfo } from "../models/DTOs/CommentsInfo";
 import { CommentsEntity } from "../models/entities/CommentsEntity";
 import { B2Service } from "./B2Service";
@@ -88,12 +88,12 @@ export class CommentService implements ICommentsService{
 
         const comment=new CommentsEntity();
         
-        const finalFiles: any[]=[];
+        let finalFiles: any[]=[];
 
         // ────────────────────────────
             // 2. Validar si vienen archivos
         // ────────────────────────────
-        if(data.archivos && data.archivos.length>0){
+        /* if(data.archivos && data.archivos.length>0){
 
             try{
                 console.log('empezamos a leer los archivos mandados');
@@ -134,10 +134,12 @@ export class CommentService implements ICommentsService{
                 console.log(`ha ocurrido un error inesperado ${error}`);
             }
             
-        }
+        } */
 
         //WE UPLOAD THE FILES INTO THE ARRAY 
         /* finalFiles=await this.uploadNewFileIntoB2ByUpdate(finalFiles, data); */
+
+        finalFiles=await this.uploadNewFileIntoB2ByUpdate(finalFiles, data.archivos ?? []);
 
         
         //WE FILL THE REST ATTRIBUTES
@@ -275,7 +277,7 @@ export class CommentService implements ICommentsService{
             commentUpdated.archivos=result.archivos ?? []; */
 
 
-            const result=await this.uploadNewFileIntoB2ByUpdate(comment.archivos, data);
+            const result=await this.uploadNewFileIntoB2ByUpdate(comment.archivos, data.archivosCargados ?? []);
 
             commentUpdated._id=comment._id;
             commentUpdated.mensaje=comment.mensaje ?? 'no message';
@@ -366,13 +368,15 @@ export class CommentService implements ICommentsService{
     }
 
     //METHOD TO UPLOAD THE FILE INTO THE BUCKET OF B2 AND INTO THE ARRAY OF COMMENT BY THE URL
-    private async uploadNewFileIntoB2ByUpdate(comment:any[], data:UpdateCommentFileDTO) : Promise<any> {
+    private async uploadNewFileIntoB2ByUpdate(comment:any[], data:FileInputDTO[]) : Promise<any> {
         //NOW IN THIS SECTION ASK IF THE USER UPLOAD NEW FILES INTO THE COMMENT
-        if(data.archivosCargados && data.archivosCargados.length>0){
+        /* if(data.archivosCargados && data.archivosCargados.length>0){ */
+        if(data && data.length>0)
+        {
 
             try{
 
-                for(const file of data.archivosCargados){
+                for(const file of data){
 
                     if (!file.buffer || !file.originalName) {
                         console.log('nombres invalidos o formato invalido');
