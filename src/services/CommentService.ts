@@ -7,6 +7,7 @@ import { CommentsInfo } from "../models/DTOs/CommentsInfo";
 import { CommentsEntity } from "../models/entities/CommentsEntity";
 import { B2Service } from "./B2Service";
 import { SessionFileDTO } from "../models/DTOs/SessionFileDTO";
+import { CommentUpdateDTO, UpdateCommentFileDTO } from "../models/DTOs/CommentUpdateDTO";
 
 export class CommentService implements ICommentsService{
 
@@ -166,8 +167,120 @@ export class CommentService implements ICommentsService{
     }
 
 
-    updateCommentsById(id: string, data: CreateCommentDTO): Promise<CommentsInfo | null> {
-        throw new Error("Method not implemented.");
+    //METHOD TO UPDATE THE COMMENT BY ID
+    async updateCommentsById(id: string, data: UpdateCommentFileDTO): Promise<CommentsInfo | null> {
+        const comment=await this._repo.getCommentById(id);
+
+        const commentUpdated=new CommentUpdateDTO();
+
+        if(comment==null){
+            return null;
+        }
+
+        //WE ASK IF THE USER SEND FILES OR THE ID THE FILE ID
+        /* if(data.archivosEliminar && data.archivosEliminar?.length>0){
+            //RUN THE FOR CICLE BY FIND THE FILEID TO DELETE
+            for(const fileId of data.archivosEliminar){
+
+                //SEARCH THE FILEID INTO THE COMMENTS.ARCHIVOS
+                const fileFound=comment.archivos.find((a: { _id: { toString: () => string; }; })=> a._id.toString()===fileId);
+                if(!fileFound){
+                    console.log(`el archivo con id ${fileId} no se encuentra dentro del comentario`);
+                }
+
+                try{
+
+                    console.log(`eliminaremos el archivo con nombre ${fileFound.nombre}`);
+
+                    //DELETE THE FILE INTO THE BUCKET OF B2
+                    await this._b2.deleteFile(fileFound.nombre);
+                    console.log('archivo eliminado correctamente');
+
+                    //DELETE THE FILE INTO THE ARRAY OF THE COMMENT ARCHIVOS
+                    console.log('procederemos a eliminar el archivo dentro del array de archivos');
+                    comment.archivos = comment.archivos.filter((a: { _id: { toString: () => string; }; })=> a._id.toString()!==fileId);
+
+                }catch(error:any){
+                    console.log(`ha ocurrido un error inesperado ${error}`);
+                }
+
+
+            }
+
+
+        } */
+
+
+        //NOW IN THIS SECTION ASK IF THE USER UPLOAD NEW FILES INTO THE COMMENT
+        /* if(data.archivosCargados && data.archivosCargados.length>0){
+
+            try{
+
+                for(const file of data.archivosCargados){
+
+                    if (!file.buffer || !file.originalName) {
+                        continue; // ignora archivos inválidos
+                    }
+
+                    // Generar nombre único para Backblaze
+                    const nombreFinal = `${Date.now()}-${file.originalName}`;
+                    console.log(`nombre del archivo mandado ${nombreFinal}`);
+
+
+                    console.log('Empezamos a subir el archivo a lo que es el bucket de b2');
+                    const fileName=await this._b2.uploadFile(
+                        file.buffer,
+                        nombreFinal
+                    );
+
+                    console.log(`nombre del archivo generado dentro del bucket, guardamos solo la ruta ${fileName}`);
+
+                    //Montamos las url dadas y los nombres de los archivos
+                    comment.archivos.push({
+                        nombre: fileName,
+                        url:fileName,
+                        tamaño: file.size ? file.size.toString() :'0'
+                    });
+
+                    console.log(`ahora miramos como queda guardado dentro de la lista que nos guarda las rutas ${comment.archivos}`);
+
+                }
+                console.log('aqui termina el ciclo for');
+
+            }catch(error:any){
+                console.log(`ha ocurrido un error inesperado ${error}`);
+            }
+            
+        } */
+
+        try{
+            await this.deleteFilesIntoB2AndArray(comment, data);
+
+            const result=await this.uploadNewFileIntoB2ByUpdate(comment, data);
+
+
+            commentUpdated._id=result._id;
+            commentUpdated.mensaje=result.mensaje;
+            commentUpdated.tareaId=result.tareaId;
+            commentUpdated.archivos=result.archivos ?? [];
+
+
+            const commentUploaded=await this._repo.updateCommentsById(commentUpdated);
+
+            if(!commentUploaded){
+                throw new Error('no hemos logrado actualizar el comentario');
+            }
+
+            return this.fillComments(commentUpdated);
+
+
+
+        }catch(error:any){
+            console.log(`ha ocurrido un error inesperado ${error}`);
+            throw new Error(`ha ocurrido un error inesperado ${error}`);
+
+        }
+
     }
 
     //METHOD TO GET ONE COMMENT BY ID
@@ -192,6 +305,93 @@ export class CommentService implements ICommentsService{
             estado: data.estado,
             fechaCreacion: data.fechaCreacion
         }
+    }
+
+
+    //METHOD TO DELETE THE FILE INTO B2 AND THE ARRAY INTO THE OBJECT CommentDTO
+    private async deleteFilesIntoB2AndArray(comment:any, data:UpdateCommentFileDTO) : Promise<void> {
+        //WE ASK IF THE USER SEND FILES OR THE ID THE FILE ID
+        if(data.archivosEliminar && data.archivosEliminar?.length>0){
+            //RUN THE FOR CICLE BY FIND THE FILEID TO DELETE
+            for(const fileId of data.archivosEliminar){
+
+                //SEARCH THE FILEID INTO THE COMMENTS.ARCHIVOS
+                const fileFound=comment.archivos.find((a: { _id: { toString: () => string; }; })=> a._id.toString()===fileId);
+                if(!fileFound){
+                    console.log(`el archivo con id ${fileId} no se encuentra dentro del comentario`);
+                    continue;
+                }
+
+                try{
+
+                    console.log(`eliminaremos el archivo con nombre ${fileFound.nombre}`);
+
+                    //DELETE THE FILE INTO THE BUCKET OF B2
+                    await this._b2.deleteFile(fileFound.nombre);
+                    console.log('archivo eliminado correctamente');
+
+                    //DELETE THE FILE INTO THE ARRAY OF THE COMMENT ARCHIVOS
+                    console.log('procederemos a eliminar el archivo dentro del array de archivos');
+                    comment.archivos = comment.archivos.filter((a: { _id: { toString: () => string; }; })=> a._id.toString()!==fileId);
+
+                }catch(error:any){
+                    console.log(`ha ocurrido un error inesperado ${error}`);
+                }
+
+
+            }
+
+            console.log('aqui se termina el ciclo for que nos eliminaba los archivos que estuviesen cargados');
+
+        }
+    }
+
+    //METHOD TO UPLOAD THE FILE INTO THE BUCKET OF B2 AND INTO THE ARRAY OF COMMENT BY THE URL
+    private async uploadNewFileIntoB2ByUpdate(comment:any, data:UpdateCommentFileDTO) : Promise<any> {
+        //NOW IN THIS SECTION ASK IF THE USER UPLOAD NEW FILES INTO THE COMMENT
+        if(data.archivosCargados && data.archivosCargados.length>0){
+
+            try{
+
+                for(const file of data.archivosCargados){
+
+                    if (!file.buffer || !file.originalName) {
+                        console.log('nombres invalidos o formato invalido');
+                        continue; // ignora archivos inválidos
+                    }
+
+                    // Generar nombre único para Backblaze
+                    const nombreFinal = `${Date.now()}-${file.originalName}`;
+                    console.log(`nombre del archivo mandado ${nombreFinal}`);
+
+
+                    console.log('Empezamos a subir el archivo a lo que es el bucket de b2');
+                    const fileName=await this._b2.uploadFile(
+                        file.buffer,
+                        nombreFinal
+                    );
+
+                    console.log(`nombre del archivo generado dentro del bucket, guardamos solo la ruta ${fileName}`);
+
+                    //Montamos las url dadas y los nombres de los archivos
+                    comment.archivos.push({
+                        nombre: fileName,
+                        url:fileName,
+                        tamaño: file.size ? file.size.toString() :'0'
+                    });
+
+                    console.log(`ahora miramos como queda guardado dentro de la lista que nos guarda las rutas ${comment.archivos}`);
+
+                }
+                console.log('aqui termina el ciclo for');
+
+            }catch(error:any){
+                console.log(`ha ocurrido un error inesperado ${error}`);
+            }
+            
+        }
+
+        return comment;
     }
     
 }

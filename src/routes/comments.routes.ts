@@ -9,11 +9,18 @@ const commentController=new CommentsController();
 
 router.post('/createComment',upload.array("archivos"),commentController.createComment);
 
+
+router.put('/updateComment/:id',upload.array("archivosCargados"), commentController.updateCommentById);
+
+
 router.get('/downloadFile/:commentId/file/:fileId',commentController.downloadFileByCommentId);
+
 
 router.delete('/deleteCommentById/:id',commentController.deleteComment);
 
+
 router.get('/getAllCommentsByTaskId/:taskId',commentController.getAllCommentsByTaskId);
+
 
 router.get('/getCommentById/:id',commentController.getCommentById);
 

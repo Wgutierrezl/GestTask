@@ -6,6 +6,7 @@ import { CommentsRepository } from "../repositories/CommentsRepository";
 import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
 import { CreateCommentDTO } from "../models/DTOs/CommentsDTO";
+import { UpdateCommentFileDTO } from "../models/DTOs/CommentUpdateDTO";
 
 
 export class CommentsController{
@@ -69,6 +70,53 @@ export class CommentsController{
             }
 
             return res.status(201).json(commentCreated);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+    //ENDPOINT TO UPDATE A COMMENT BY ID AND THE BODY THE OBJECT
+    updateCommentById=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {id}=req.params;
+            if(!id){
+                return res.status(400).json({message:'debes de diligenciar el id'});
+            }
+            const dto:UpdateCommentFileDTO={
+                mensaje: req.body.mensaje ?? undefined,
+                archivosEliminar:[],
+                archivosCargados: []
+            };
+
+            // 1. ARCHIVOS A ELIMINAR (array de strings)
+            if (req.body.archivosEliminar) {
+
+                if (Array.isArray(req.body.archivosEliminar)) {
+                    dto.archivosEliminar = req.body.archivosEliminar;
+                } else {
+                    // si viene como string JSON
+                    dto.archivosEliminar = JSON.parse(req.body.archivosEliminar);
+                }
+            }
+
+            // 2. Verificar si vienen archivos
+            if (req.files && Array.isArray(req.files)) {
+                dto.archivosCargados = req.files.map((file: Express.Multer.File) => ({
+                    originalName: file.originalname,
+                    buffer: file.buffer,
+                    size: file.size
+                }));
+            }
+
+
+            const result=await this._service.updateCommentsById(id, dto);
+            if(!result){
+                return res.status(400).json({message:'no hemos logrado actualizar el comentario'});
+            }
+
+            return res.status(200).json(result);
+
 
         }catch(error:any){
             return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
