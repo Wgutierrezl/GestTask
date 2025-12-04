@@ -36,10 +36,10 @@ export class BoardService implements IBoardService{
         board.descripcion=data.descripcion;
         board.ownerId=data.ownerId;
 
-        if(data.miembros && data.miembros.length>0){
+        /* if(data.miembros && data.miembros.length>0){
             board.miembros=data.miembros;
 
-        }
+        } */
 
         if(data.pipelines && data.pipelines.length>0){
             board.pipelines=data.pipelines;
@@ -60,7 +60,7 @@ export class BoardService implements IBoardService{
             nombre: boardCreated.nombre,
             descripcion : boardCreated.descripcion,
             ownerId: boardCreated.ownerId,
-            miembros: boardCreated.miembros ?? [],
+            /* miembros: boardCreated.miembros ?? [], */
             pipelines: boardCreated.pipelines ?? [],
         };
     }
@@ -107,9 +107,9 @@ export class BoardService implements IBoardService{
         }
         
         
-        if(data.miembros !== undefined){
+        /* if(data.miembros !== undefined){
             board.miembros=data.miembros;
-        }
+        } */
 
         if(data.pipelines !== undefined){
             board.pipelines=data.pipelines;
@@ -136,7 +136,7 @@ export class BoardService implements IBoardService{
             nombre: data.nombre,
             descripcion : data.descripcion,
             ownerId: data.ownerId,
-            miembros: data.miembros ?? [],
+            /* miembros: data.miembros ?? [], */
             pipelines: data.pipelines ?? [],
         };
     }
