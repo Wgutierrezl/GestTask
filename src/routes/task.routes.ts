@@ -6,6 +6,12 @@ import { requireBoardRole } from "../middleware/middlewareBoards";
 const router=Router();
 const taskController=new TaskController();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Task
+ *   description: Operaciones de tareas
+ */
 
 router.post('/createTask/boardId/:tableroId',
             authMiddleware(['admin','usuario']),

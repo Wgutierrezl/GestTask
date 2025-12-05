@@ -8,7 +8,12 @@ import { requireBoardRole } from "../middleware/middlewareBoards";
 const router=Router();
 const commentController=new CommentsController();
 
-
+/**
+ * @swagger
+ * tags:
+ *   name: Comments
+ *   description: Operaciones de comentarios
+ */
 router.post('/createComment/boardId/:tableroId',
             upload.array("archivos"),
             authMiddleware(['admin','usuario']), 

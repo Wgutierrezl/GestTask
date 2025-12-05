@@ -7,7 +7,12 @@ import { requireBoardRole } from "../middleware/middlewareBoards";
 const router=Router();
 const bm_Controller=new BoardMemberController();
 
-
+/**
+ * @swagger
+ * tags:
+ *   name: Board_Members
+ *   description: Operaciones de miembros de tableros
+ */
 
 router.post('/addMember',
             authMiddleware(['admin','usuario']), 

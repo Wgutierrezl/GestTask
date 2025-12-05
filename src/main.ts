@@ -9,7 +9,7 @@ import PipeRoutes from './routes/pipeline.routes';
 import TaskRoutes from './routes/task.routes';
 import BoardRouter from './routes/board.routes';
 import CommentRouter from './routes/comments.routes'
-import BmRouter from './routes/BoardMember.routes'
+import BmRouter from './routes/boardMember.routes'
 import { swaggerSetUp } from './config/swagger-config';
 
 const PORT = process.env.PORT || 3000;

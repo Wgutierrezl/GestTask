@@ -6,6 +6,12 @@ import { requireBoardRole } from "../middleware/middlewareBoards";
 const router=Router();
 const pipeController=new PipelineController();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Pipelines
+ *   description: Operaciones de pipelines
+ */
 
 router.post('/createPipelines/boardId/:tableroId',
             authMiddleware(['admin','usuario']),

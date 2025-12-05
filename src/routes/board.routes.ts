@@ -5,6 +5,12 @@ import { authMiddleware } from "../middleware/genericMiddleware";
 const router=Router();
 const boardController=new BoardController();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Board
+ *   description: Operaciones de tableros
+ */
 
 router.post('/createBoard', 
             authMiddleware(['admin','usuario']),
