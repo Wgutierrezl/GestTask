@@ -7,7 +7,7 @@ export class pipelinesDTO{
     nombre!:string
     descripcion!: string
     estado!: string
-    ownerId!: string
+    tableroId!: string
     etapas!: EtapasDTO[]
 }
 

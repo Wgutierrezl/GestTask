@@ -72,16 +72,16 @@ export class PipelineController{
     }
 
 
-    getPipelineByOwnerId=async(req:Request, res:Response): Promise<Response> => {
+    getPipelineByBoardId=async(req:Request, res:Response): Promise<Response> => {
         try{
-            const {userId}=req.params;
-            if(!userId){
+            const {boardId}=req.params;
+            if(!boardId){
                 return res.status(400).json({ message: "Debes incluir el id del propietario"});
             }
 
-            const pipelines=await this._service.getPipelinesByOwnerId(userId);
+            const pipelines=await this._service.getPipelinesByBoardId(boardId);
             if(pipelines==null){
-                return res.status(404).json({message:"Aun no tienes pipelines creados"});
+                return res.status(404).json({message:"aun no hay pipelines creados para este tablero"});
             }
 
             return res.status(200).json(pipelines);

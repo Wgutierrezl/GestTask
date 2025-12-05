@@ -45,9 +45,9 @@ export class BoardService implements IBoardService{
 
         } */
 
-        if(data.pipelines && data.pipelines.length>0){
+        /* if(data.pipelines && data.pipelines.length>0){
             board.pipelines=data.pipelines;
-        }
+        } */
 
         board.fechaCreacion=new Date();
         board.estado='activo';
@@ -64,14 +64,7 @@ export class BoardService implements IBoardService{
             throw new Error("no hemos logrado crear ek board");
         }
 
-        return  {
-            _id:boardCreated._id,
-            nombre: boardCreated.nombre,
-            descripcion : boardCreated.descripcion,
-            ownerId: boardCreated.ownerId,
-            /* miembros: boardCreated.miembros ?? [], */
-            pipelines: boardCreated.pipelines ?? [],
-        };
+        return this.fillObjectBoard(boardCreated);
     }
 
 
@@ -120,9 +113,9 @@ export class BoardService implements IBoardService{
             board.miembros=data.miembros;
         } */
 
-        if(data.pipelines !== undefined){
+        /* if(data.pipelines !== undefined){
             board.pipelines=data.pipelines;
-        }
+        } */
 
         board._id=id;
 
@@ -146,7 +139,7 @@ export class BoardService implements IBoardService{
             descripcion : data.descripcion,
             ownerId: data.ownerId,
             /* miembros: data.miembros ?? [], */
-            pipelines: data.pipelines ?? [],
+            /* pipelines: data.pipelines ?? [], */
         };
     }
 

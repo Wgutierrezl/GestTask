@@ -8,7 +8,7 @@ const boardsSchema=new Schema({
     descripcion : {type: String, required: true},
     ownerId: {type: Types.ObjectId, ref : 'usuarios' ,required: true},
    /*  miembros: [{type: Types.ObjectId, ref:'usuarios' , required: true}], */
-    pipelines : [{type: Types.ObjectId , ref:'pipelines', required:false}],
+    /* pipelines : [{type: Types.ObjectId , ref:'pipelines', required:false}], */
     fechaCreacion : {type: Date , default: Date.now },
     estado: {type: String, enum:['activo','inactivo'], default : 'activo', required: true}
 });

@@ -11,7 +11,7 @@ const pipelineSchema = new Schema({
     nombre: { type: String, required: true },
     descripcion: { type: String, required: true },
     estado: { type: String, enum: ['activo', 'inactivo'], default: 'activo' },
-    ownerId: { type: Types.ObjectId, ref: 'usuarios', required: true },
+    tableroId: { type: Types.ObjectId, ref: 'tableros', required: true },
     etapas: { type: [EtapaSchema], default: [] },
     fechaCreacion: { type: Date, default: Date.now }
 });

@@ -38,7 +38,7 @@ export class PipelinesService implements IPipelinesService{
         pipe.nombre=data.nombre;
         pipe.descripcion=data.descripcion;
         pipe.estado=data.estado;
-        pipe.ownerId=data.ownerId;
+        pipe.tableroId=data.tableroId;
         
         if(data.etapas && data.etapas.length>0){
             pipe.etapas=data.etapas;
@@ -61,7 +61,7 @@ export class PipelinesService implements IPipelinesService{
         pipeline.descripcion=data.descripcion;
         pipeline.estado=data.estado;
         pipeline.etapas=data.etapas;
-        pipeline.ownerId=data.ownerId;
+        pipeline.tableroId=data.tableroId;
         pipeline.fechaCreacion = new Date();
 
 
@@ -93,8 +93,8 @@ export class PipelinesService implements IPipelinesService{
         return response;
     }
 
-    async getPipelinesByOwnerId(userId: string): Promise<pipelinesDTO[] | null> {
-        const response=await this._repo.getPipelinesByOwnerId(userId);
+    async getPipelinesByBoardId(boardId: string): Promise<pipelinesDTO[] | null> {
+        const response=await this._repo.getPipelinesByBoardId(boardId);
         if(response?.length===0 || response==null){
             return null;
         }
@@ -108,7 +108,7 @@ export class PipelinesService implements IPipelinesService{
             _id:data._id,
             nombre:data.nombre,
             descripcion:data.descripcion,
-            ownerId: data.ownerId,
+            tableroId: data.tableroId,
             estado: data.estado,
             etapas: data.etapas ?? []
         };

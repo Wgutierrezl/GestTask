@@ -3,5 +3,5 @@ export class BoardUpdateDTO{
     nombre?: string;
     descripcion?: string;
     /* miembros?: [] */
-    pipelines? : []
+    /* pipelines? : [] */
 }

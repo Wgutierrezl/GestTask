@@ -4,7 +4,7 @@ export class PipelinesEntity{
     nombre!:string
     descripcion!: string
     estado!: string
-    ownerId!: string
+    tableroId!: string
     etapas!: EtapasDTO[]
     fechaCreacion: Date=new Date();
 }

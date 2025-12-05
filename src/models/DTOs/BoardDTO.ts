@@ -3,5 +3,5 @@ export class BoardDTO{
     descripcion! : string;
     ownerId!: string;
     /* miembros?: [] */
-    pipelines? : []
+    /* pipelines? : [] */
 }

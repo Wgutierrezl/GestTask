@@ -6,7 +6,7 @@ export const requireBoardRole = (allowedRoles: string[] = []) => {
     return async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const userId = req.user?.id;
-            const tableroId = req.params.tableroId;
+            const tableroId = req.params.tableroId || req.body.tableroId;
 
             if (!userId) return res.status(401).json({ message: "Usuario no autenticado" });
             if (!tableroId) return res.status(400).json({ message: "Falta el ID del tablero" });

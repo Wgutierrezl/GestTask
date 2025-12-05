@@ -18,7 +18,7 @@ router.get('/getAllPipelines',authMiddleware(['admin']),pipeController.getAllPip
 
 router.get('/getPipelineById/:id',authMiddleware(['admin','usuario']),pipeController.getPipelineById);
 
-router.get('/getPipelinesByOwnerId/:userId',authMiddleware(['admin','usuario']) ,pipeController.getPipelineByOwnerId);
+router.get('/getPipelinesByBoardId/:boardId',authMiddleware(['admin','usuario']) ,pipeController.getPipelineByBoardId);
 
 router.delete('/deletePipelinesById/:id',
                 authMiddleware(['admin','usuario']),
