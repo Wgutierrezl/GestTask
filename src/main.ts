@@ -9,6 +9,7 @@ import PipeRoutes from './routes/pipeline.routes';
 import TaskRoutes from './routes/task.routes';
 import BoardRouter from './routes/board.routes';
 import CommentRouter from './routes/comments.routes'
+import BmRouter from './routes/BoardMember.routes'
 import { swaggerSetUp } from './config/swagger-config';
 
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,8 @@ async function start() {
 		app.use('/users',UserRoutes)
 
 		app.use('/boards',BoardRouter);
+
+		app.use('/boardMembers',BmRouter)
 
 		app.use('/pipelines',PipeRoutes);
 
