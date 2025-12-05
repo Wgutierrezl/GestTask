@@ -7,20 +7,34 @@ const router=Router();
 const pipeController=new PipelineController();
 
 
-router.post('/createPipelines',
+router.post('/createPipelines/boardId/:tableroId',
             authMiddleware(['admin','usuario']),
             requireBoardRole(['owner','miembro']),
             pipeController.createPipelines);
 
-router.put('/updatePipeline/:id', pipeController.updatePipeline);
 
-router.get('/getAllPipelines',authMiddleware(['admin']),pipeController.getAllPipelines);
+router.put('/updatePipeline/:id/boardId/:tableroId',
+            authMiddleware(['admin','usuario']),
+            requireBoardRole(['owner','miembro'])  , 
+            pipeController.updatePipeline);
 
-router.get('/getPipelineById/:id',authMiddleware(['admin','usuario']),pipeController.getPipelineById);
+            
+router.get('/getAllPipelines',
+            authMiddleware(['admin']),
+            pipeController.getAllPipelines);
 
-router.get('/getPipelinesByBoardId/:boardId',authMiddleware(['admin','usuario']) ,pipeController.getPipelineByBoardId);
 
-router.delete('/deletePipelinesById/:id',
+router.get('/getPipelineById/:id',
+            authMiddleware(['admin','usuario']),
+            pipeController.getPipelineById);
+
+
+router.get('/getPipelinesByBoardId/:boardId',
+            authMiddleware(['admin','usuario']),
+            pipeController.getPipelineByBoardId);
+
+
+router.delete('/deletePipelinesById/:id/boardId/:tableroId',
                 authMiddleware(['admin','usuario']),
                 requireBoardRole(['owner']),
                 pipeController.deletePipelineId);

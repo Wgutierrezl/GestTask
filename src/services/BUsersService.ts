@@ -86,6 +86,8 @@ export class BUsersService implements IBUsersService{
             boardMember.usuarioId=data.usuarioId;
         }
 
+        boardMember._id=id
+
 
         const boardUpdated=await this._repo.updateMemberById(boardMember);
 

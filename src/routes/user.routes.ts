@@ -43,7 +43,7 @@ const userController=new UserController();
  *       500:
  *         description: Error al registrar usuario
  */
-router.post('/registerUser',authMiddleware(['admin']),userController.createUser);
+router.post('/registerUser',userController.createUser);
 
 router.post('/loginUser',userController.loginUser);
 
