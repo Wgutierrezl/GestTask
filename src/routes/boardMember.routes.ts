@@ -16,6 +16,9 @@ router.put('/updateBoardMemberById/:id',bm_Controller.updateBoardMemberById);
 router.get('/getAllBoardsMembersByUserId/:userId',bm_Controller.getAllBoardMemberByUserId);
 
 
+router.get('/getAllMemberByBoardId/:boardId',bm_Controller.getAllMembersByBoardId);
+
+
 router.get('/getBoardMemberById/:id',bm_Controller.getBoardMemberById);
 
 

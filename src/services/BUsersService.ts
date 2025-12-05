@@ -13,6 +13,16 @@ export class BUsersService implements IBUsersService{
 
     }
 
+    //METHOD TO GEL ALL MEMBER BY BOARD ID
+    async getBoardMemberByBoardId(boardId: string): Promise<any[] | null> {
+        const member=await this._repo.getBoardMemberByBoardId(boardId);
+        if(!member || member.length===0){
+            return null;
+        }
+
+        return member;
+    }
+
     //METHOD TO ADD A NEW MEMBER INTO THE BOARD
     async addMember(data: BoardsUsersDTO): Promise<any | null> {
         const member=new BUsersEntity();

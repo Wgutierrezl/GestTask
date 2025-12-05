@@ -6,6 +6,11 @@ import { BUsersEntity } from "../models/entities/BUsersEntity";
 
 export class BUsersRepository implements IBUsersRepository{
 
+    //METHOD TO GET ALL MEMBER BY BOARD_ID
+    async getBoardMemberByBoardId(boardId: string): Promise<any[]> {
+        return await TableroUsuario.find({tableroId:boardId});
+    }
+
     //METHOD TO ADD MEMBER INTO THE BOARD
     async addMember(data: BUsersEntity): Promise<any> {
         const boardMember=new TableroUsuario(data);

@@ -7,4 +7,5 @@ export interface IBUsersService {
     getBoardUserById(id:string) : Promise<any | null>;
     updateMemberById(id:string, data:BoardsUsersDTO) : Promise<any | null>;
     deleteMemberBoard(id:string) : Promise<any>;
+    getBoardMemberByBoardId(boardId:string) : Promise<any[] | null>;
 }

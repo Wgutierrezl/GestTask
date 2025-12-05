@@ -75,6 +75,26 @@ export class BoardMemberController{
         }
     }
 
+    //ENDPOINT TO GET MEMBERS BY BOARD_ID
+    getAllMembersByBoardId=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {boardId}=req.params;
+            if(!boardId){
+                return res.status(400).json({message:'debes de digitar el id'});
+            }
+
+            const boardMembers=await this._service.getBoardMemberByBoardId(boardId);
+            if(!boardMembers){
+                return res.status(400).json({message:'aun no hay usuarios agregados a este tablero'});
+            }
+
+            return res.status(200).json(boardMembers);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error.message | error}`});
+        }
+    }
+
     //ENDPOINT TO UPDATE A MEMBER BY ID
     updateBoardMemberById=async(req:Request, res:Response ) : Promise<Response> => {
         try{

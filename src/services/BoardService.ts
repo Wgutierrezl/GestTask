@@ -5,13 +5,17 @@ import { BoardDTO } from "../models/DTOs/BoardDTO";
 import { BoardInfoDTO } from "../models/DTOs/BoardInfoDTO";
 import { BoardEntity } from "../models/entities/BoardsEntity";
 import { BoardUpdateDTO } from "../models/DTOs/BoardUpdateDTO";
+import { IBUsersService } from "../interfaces/IBUsers/IBUsersService";
+import { BoardsUsersDTO } from "../models/DTOs/BoardsUsersDTO";
 
 export class BoardService implements IBoardService{
 
     private readonly _repo:IBoardRepository
+    private readonly _boardMember: IBUsersService;
 
-    constructor(repo:IBoardRepository){
+    constructor(repo:IBoardRepository, boardMember:IBUsersService){
         this._repo=repo;
+        this._boardMember=boardMember;
     }
     
     async deleteBoardById(id: string): Promise<any | null> {
@@ -49,7 +53,12 @@ export class BoardService implements IBoardService{
         board.estado='activo';
 
         const boardCreated=await this._repo.createBoard(board);
-        console.log(boardCreated);
+        console.log(`tablero creado ${boardCreated}`);
+
+
+        console.log('desde aqui se empezara a crear dentro de tablero_usuarios el miembro propietario');
+
+        await this.fillObjectBoardMemberOwner(boardCreated);
 
         if(boardCreated==null){
             throw new Error("no hemos logrado crear ek board");
@@ -139,6 +148,30 @@ export class BoardService implements IBoardService{
             /* miembros: data.miembros ?? [], */
             pipelines: data.pipelines ?? [],
         };
+    }
+
+
+    private async fillObjectBoardMemberOwner(data:any) : Promise<void> {
+        try{
+            const board=new BoardsUsersDTO();
+
+            board.usuarioId=data.ownerId;
+            board.tableroId=data._id;
+            board.rol='owner';
+
+            console.log(`Se creara dentro de la tablero_usuarios el propietario del tabler con id ${data.ownerId}`);
+
+
+            const memberCreated=await this._boardMember.addMember(board);
+            console.log(`miembro creado correctamente como propietario del tablero con id ${memberCreated.usuarioId}`);
+
+            console.log(`miembro creado : ${memberCreated}`);
+
+        }catch(error:any){
+            console.log(`ha ocurrido un error inesperado ${error.message || error}`);
+        }
+        
+
     }
     
 }

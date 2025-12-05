@@ -7,4 +7,5 @@ export interface IBUsersRepository{
     getBoardUserById(id:string) : Promise<any>;
     updateMemberById(data:any) : Promise<any>;
     deleteMemberBoard(id:string) : Promise<any>;
+    getBoardMemberByBoardId(boardId:string) : Promise<any[]>;
 }

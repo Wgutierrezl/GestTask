@@ -5,6 +5,9 @@ import { BoardRepository } from "../repositories/BoardsRepository";
 import { BoardService } from "../services/BoardService";
 import { Request } from "express";
 import { Response } from "express";
+import { BUsersService } from "../services/BUsersService";
+import { IBUsersService } from "../interfaces/IBUsers/IBUsersService";
+import { BUsersRepository } from "../repositories/BUsersRepository";
 
 export class BoardController{
 
@@ -12,7 +15,9 @@ export class BoardController{
 
     constructor(){
         const repo=new BoardRepository();
-        this._service=new BoardService(repo);
+        const _repoMember=new BUsersRepository()
+        const boardMember=new BUsersService(_repoMember)
+        this._service=new BoardService(repo, boardMember);
     }
 
     createBoard=async(req:Request, res:Response) : Promise<Response> =>{
