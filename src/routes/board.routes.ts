@@ -47,8 +47,6 @@ router.post('/createBoard',
             authMiddleware(['admin','usuario']),
             boardController.createBoard);
 
-
-
 /**
  * @swagger
  * /boards/getBoardByOwnerId/{userId}:
@@ -78,8 +76,6 @@ router.get('/getBoardByOwnerId/:userId',
             authMiddleware(['admin','usuario']),
             boardController.getAllBoardsByOwnerId);
 
-
-
 /**
  * @swagger
  * /boards/getBoardById/{id}:
@@ -108,8 +104,6 @@ router.get('/getBoardByOwnerId/:userId',
 router.get('/getBoardById/:id',
             authMiddleware(['admin','usuario']),
             boardController.getBoardById);
-
-
 /**
  * @swagger
  * /boards/updateBoard/{id}:
