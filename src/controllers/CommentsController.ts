@@ -96,7 +96,7 @@ export class CommentsController{
                     dto.archivosEliminar = req.body.archivosEliminar;
                 } else {
                     // si viene como string JSON
-                    dto.archivosEliminar = JSON.parse(req.body.archivosEliminar);
+                    dto.archivosEliminar = [req.body.archivosEliminar];
                 }
             }
 

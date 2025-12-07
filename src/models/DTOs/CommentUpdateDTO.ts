@@ -7,6 +7,6 @@ export class CommentUpdateDTO extends CommentsDTO{
 
 export class UpdateCommentFileDTO{
     mensaje?: string;
-    archivosEliminar?:[]
+    archivosEliminar?:string[]
     archivosCargados?: FileInputDTO[]
 }
