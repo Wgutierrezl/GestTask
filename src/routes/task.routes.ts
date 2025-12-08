@@ -249,7 +249,7 @@ router.get('/getAllTaskByPipeId/:pipelineId',authMiddleware(['admin','usuario'])
 
 /**
  * @swagger
- * /tasks/getAllTaskByUserId/{userId}:
+ * /tasks/getAllTaskByUserId/{userId}/pipelineId/{pipelineId}/boardId/{boardId}:
  *   get:
  *     summary: Obtener todas las tareas asociadas a un usuarioId
  *     tags: [Task]
@@ -262,6 +262,18 @@ router.get('/getAllTaskByPipeId/:pipelineId',authMiddleware(['admin','usuario'])
  *         schema:
  *           type: string
  *         description: ID del usuario del cual se desean obtener las tareas
+ *       - in: path
+ *         name: pipelineId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del pipeline donde se encuentra la tarea
+ *       - in: path
+ *         name: boardId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero donde se encuentra la tarea
  *     responses:
  *       200:
  *         description: Lista de tareas obtenida exitosamente
@@ -314,7 +326,86 @@ router.get('/getAllTaskByPipeId/:pipelineId',authMiddleware(['admin','usuario'])
  *       500:
  *         description: Error interno del servidor
  */
-router.get('/getAllTaskByUserId/:userId',authMiddleware(['admin','usuario']),taskController.getTaskByUserId);
+router.get('/getAllTaskByUserId/:userId/pipelineId/:pipelineId/boardId/:boardId',
+            authMiddleware(['admin','usuario']),
+            taskController.getTaskByUser_Pipeline_Board);
+
+/**
+ * @swagger
+ * /tasks/getMyTaskByPipelineId/{pipelineId}/boardId/{boardId}:
+ *   get:
+ *     summary: Obtener todas las tareas asociadas a un usuarioId
+ *     tags: [Task]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: pipelineId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del pipeline donde se encuentra la tarea
+ *       - in: path
+ *         name: boardId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero donde se encuentra la tarea
+ *     responses:
+ *       200:
+ *         description: Lista de tareas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "task123"
+ *                   titulo:
+ *                     type: string
+ *                     example: "Llamar al cliente"
+ *                   descripcion:
+ *                     type: string
+ *                     example: "Confirmar requisitos del proyecto"
+ *                   pipelineId:
+ *                     type: string
+ *                     example: "pip001"
+ *                   etapaId:
+ *                     type: string
+ *                     example: "etp001"
+ *                   asignadoA:
+ *                     type: string
+ *                     example: "user789"
+ *                   priodidad:
+ *                     type: string
+ *                     example: "alta"
+ *                   fechaLimite:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2025-01-20T23:59:59.000Z"
+ *                   fechaFinalizacion:
+ *                     type: string
+ *                     nullable: true
+ *                     format: date-time
+ *                     example: null
+ *                   tableroId:
+ *                     type: string
+ *                     example: "board123"
+ *       400:
+ *         description: Parámetro pipelineId inválido
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: No se encontraron tareas para el pipeline
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/getMyTaskByPipelineId/:pipelineId/boardId/:boardId',
+            authMiddleware(['admin','usuario']),
+            taskController.getMyTaskByPipeline_Board_Id);
 
 /**
  * @swagger

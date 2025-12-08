@@ -8,6 +8,7 @@ import { Response } from "express";
 import { BUsersService } from "../services/BUsersService";
 import { IBUsersService } from "../interfaces/IBUsers/IBUsersService";
 import { BUsersRepository } from "../repositories/BUsersRepository";
+import { AuthRequest } from "../middleware/genericMiddleware";
 
 export class BoardController{
 
@@ -119,6 +120,28 @@ export class BoardController{
             }
 
             return res.status(204).json({message:'board eliminado correctamente'});
+
+        }catch(error:any){
+            console.log(`Ha ocurrido un error inesperado ${error}`);
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+    getMyBoards=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const id=req.user?.id;
+            if(!id){
+                return res.status(400).json({message:'no existe el id del usuario dentro del token'});
+            }
+
+            const response=await this._service.getAllBoardByOnwnerId(id);
+            if(!response){
+                return res.status(404).json({message:'el usuario aun no ha creado tableros'});
+            }
+
+            return res.status(200).json(response);
+
+
 
         }catch(error:any){
             console.log(`Ha ocurrido un error inesperado ${error}`);

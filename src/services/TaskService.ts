@@ -111,8 +111,8 @@ export class TaskService implements ITaskService{
     }
 
     //METHOD TO GET ALL TASK BY USERID
-    async getTaskByUserId(userId: string): Promise<TaskEntity[] | null> {
-        const response=await this._repo.getAllTaskByUserId(userId);
+    async getAllTaskByUser_Pipe_Board_Id(userId: string, pipelineId:string , boardId:string): Promise<TaskEntity[] | null> {
+        const response=await this._repo.getAllTaskByUser_Pipe_Board_Id(userId, pipelineId, boardId);
         if(response.length===0 || response==null){
             return null;
         }

@@ -30,8 +30,13 @@ export class TaskRepository implements ITaskRepository{
     }
 
     //METHOD TO GET ALL TASK BY USERID
-    async getAllTaskByUserId(id: string): Promise<TaskEntity[]> {
-        return await Tarea.find({asignadoA:id});
+    async getAllTaskByUser_Pipe_Board_Id(userId: string, pipelineId:string, boardId:string): Promise<TaskEntity[]> {
+        /* return await Tarea.find({asignadoA:id}); */
+        return await Tarea.find({
+            asignadoA: userId,
+            pipelineId: pipelineId,
+            tableroId: boardId
+        });
     }
 
     //METHOD TO GET TASK BY ID

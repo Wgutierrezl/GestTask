@@ -4,6 +4,7 @@ import { TaskRepository } from "../repositories/TaskRepository";
 import { TaskService } from "../services/TaskService";
 import { TaskDTO } from "../models/DTOs/TaskDTO";
 import { promises } from "dns";
+import { AuthRequest } from "../middleware/genericMiddleware";
 
 export class TaskController{
 
@@ -81,14 +82,24 @@ export class TaskController{
         }
     }
 
-    getTaskByUserId=async(req: Request, res:Response) : Promise<Response> => {
+    getTaskByUser_Pipeline_Board=async(req: Request, res:Response) : Promise<Response> => {
         try{
             const {userId}=req.params;
             if(!userId){
-                return res.status(400).json({message:"Debes de digitar el id"});
+                return res.status(400).json({message:"Debes de digitar el id del usuario"});
             }
 
-            const response=await this._service.getTaskByUserId(userId);
+            const {pipelineId}=req.params;
+            if(!pipelineId){
+                return res.status(400).json({message:"Debes de digitar el id del pipeline"});
+            }
+
+            const {boardId}=req.params;
+            if(!boardId){
+                return res.status(400).json({message:"Debes de digitar el id del tablero"});
+            }
+
+            const response=await this._service.getAllTaskByUser_Pipe_Board_Id(userId, pipelineId, boardId);
             if(response==null){
                 return res.status(404).json({message:"el usuario aun no ha registrado tareas"});
             }
@@ -123,6 +134,7 @@ export class TaskController{
         }
     }
 
+    
     deleteTask=async(req: Request, res:Response) : Promise<Response> => {
         try{
             const {id}=req.params;
@@ -136,6 +148,38 @@ export class TaskController{
             }
 
             return res.status(204).json({message:'tarea eliminada correctamente'});
+
+
+        }catch(error:any){
+            console.log(error);
+            return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+
+    getMyTaskByPipeline_Board_Id=async(req:AuthRequest, res:Response) => {
+        try{
+             const userId=req.user?.id;
+             if(!userId){
+                return res.status(400).json({message:'debes de digitar el id'});
+             }
+
+             const {pipelineId}=req.params;
+             if(!pipelineId){
+                return res.status(400).json({message:'debes de digitar el id'});
+             }
+
+             const {boardId}=req.params;
+             if(!boardId){
+                return res.status(400).json({message:"Debes de digitar el id del tablero"});
+             }
+
+             const response=await this._service.getAllTaskByUser_Pipe_Board_Id(userId, pipelineId, boardId);
+             if(response==null){
+                return res.status(404).json({message:"el usuario aun no ha registrado tareas"});
+             }
+
+             return res.status(200).json(response);
 
 
         }catch(error:any){

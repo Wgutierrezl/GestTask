@@ -153,6 +153,28 @@ router.put('/updateBoard/:id',
 
 /**
  * @swagger
+ * /boards/getMyBoards:
+ *   get:
+ *     summary: Obtener mis tableros
+ *     tags: [Board]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Tablero encontrado
+ *       404:
+ *         description: Tablero no encontrado
+ *       403:
+ *         description: Rol no autorizado
+ *       500:
+ *         description: Error al obtener tablero
+ */
+router.get('/getMyBoards',
+            authMiddleware(['admin','usuario']),
+            boardController.getMyBoards)
+
+/**
+ * @swagger
  * /boards/deleteBoardById/{id}:
  *   delete:
  *     summary: Eliminar un tablero por ID

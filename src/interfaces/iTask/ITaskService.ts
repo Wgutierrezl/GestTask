@@ -5,7 +5,7 @@ import { TaskEntity } from "../../models/entities/TaskEntity";
 export interface ITaskService{
     createTask(data:TaskDTO) : Promise<TaskEntity | null>;
     getAllTaskByPipelineId(id:string) : Promise<TaskEntity[] | null>;
-    getTaskByUserId(userId:string) : Promise<TaskEntity[] | null>;
+    getAllTaskByUser_Pipe_Board_Id(userId:string, pipelineId:string, boardId:string) : Promise<TaskEntity[] | null>;
     getTaskById(id:string) : Promise<TaskEntity | null>;
     updateTask(id:string, data:TaskDTO) : Promise<TaskUpdateDTO | null>;
     deleteTask(id:string) : Promise<any | null>;

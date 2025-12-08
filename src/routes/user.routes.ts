@@ -106,6 +106,7 @@ router.post('/loginUser',userController.loginUser);
  */
 router.get('/getUserById/:id',authMiddleware(['admin','usuario']),userController.getUserById);
 
+
 /**
  * @swagger
  * /users/getAllUsers:
@@ -123,5 +124,28 @@ router.get('/getUserById/:id',authMiddleware(['admin','usuario']),userController
  *         description: Error al obtener usuarios
  */
 router.get('/getAllUsers',authMiddleware(['admin']),userController.getAllUsers);
+
+
+/**
+ * @swagger
+ * /users/getProfile:
+ *   get:
+ *     summary: Obtener perfil del usuario
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado
+ *       404:
+ *         description: Usuario no encontrado
+ *       403:
+ *         description: Rol no autorizado
+ *       500:
+ *         description: Error al obtener el usuario
+ */
+router.get('/getProfile',
+            authMiddleware(['admin','usuario']),
+            userController.getProfile);
 
 export default router;

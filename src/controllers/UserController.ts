@@ -7,6 +7,7 @@ import { UserService } from "../services/UserService";
 import { UserRepository } from "../repositories/UserRepository";
 import { TokenService } from "../custom/TokenService";
 import { HasherService } from "../custom/HasherService";
+import { AuthRequest } from "../middleware/genericMiddleware";
 
 export class UserController{
 
@@ -74,6 +75,27 @@ export class UserController{
             const response=await this._service.getAllUsers();
             if(response==null){
                 return res.status(404).json({message:"aun no hay usuarios registrados en el sistema"});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            console.log(error);
+            return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+
+    getProfile=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const userId=req.user?.id;
+            if(!userId){
+                return res.status(400).json({message:'el id del usuario no esta en el token'});
+            }
+
+            const response=await this._service.getUserById(userId);
+            if(!response){
+                return res.status(404).json({message:'no encontramos el usuario que buscas'});
             }
 
             return res.status(200).json(response);
