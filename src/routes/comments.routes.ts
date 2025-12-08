@@ -329,5 +329,47 @@ router.get('/getCommentById/:id',
             authMiddleware(['admin','usuario']),
             commentController.getCommentById);
 
+/**
+ * @swagger
+ * /comments/getMyCommentsByTaskId/{id}:
+ *   get:
+ *     summary: Obtener mis comentarios por tareaId
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la tarea
+ *     responses:
+ *       200:
+ *         description: Comentario obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 id: "67ab9f0d2c4f121a30a312f4"
+ *                 mensaje: "Comentario de ejemplo"
+ *                 usuarioId: "672aa94b13f37f87d44b821c"
+ *                 tareaId: "673be10c5d3fbb0608c036e1"
+ *                 archivos: []
+ *                 creadoEn: "2025-02-13T18:00:00Z"
+ *       400:
+ *         description: ID inválido
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: Comentario no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */       
+router.get('/getMyCommentsByTaskId/:id',
+            authMiddleware(['admin','usuario']),
+            commentController.getMyCommentsByTaskId)
+
 
 export default router;

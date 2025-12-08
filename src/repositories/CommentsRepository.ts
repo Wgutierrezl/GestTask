@@ -5,6 +5,13 @@ import { CommentsEntity } from "../models/entities/CommentsEntity";
 import mongoose from "mongoose";
 
 export class CommentsRepository implements ICommentsRepository{
+
+    async getMyCommentsByTaskId(id: string, userId: string): Promise<any[]> {
+        return await Comments.find({
+            usuarioId:userId,
+            tareaId:id
+        });
+    }
     async deleteCommentById(id: string): Promise<any> {
         const result=await Comments.deleteOne({_id:new mongoose.Types.ObjectId(id)});
         return result.deletedCount>0;   

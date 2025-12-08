@@ -7,6 +7,7 @@ import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
 import { CreateCommentDTO } from "../models/DTOs/CommentsDTO";
 import { UpdateCommentFileDTO } from "../models/DTOs/CommentUpdateDTO";
+import { AuthRequest } from "../middleware/genericMiddleware";
 
 
 export class CommentsController{
@@ -207,6 +208,32 @@ export class CommentsController{
 
         }catch(error:any){
             return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+
+    //ENDPOINT TO GET ALL MY TASK BY TASK ID
+    getMyCommentsByTaskId=async(req:AuthRequest, res:Response) :Promise<Response> => {
+        try{
+            const {id}=req.params
+            if(!id){
+                return res.status(400).json({message:'debes de digitar el id de la tarea'});
+            }
+
+            const userId=req.user?.id;
+            if(!userId){
+                return res.status(400).json({message:'el token no nos proporciona el id del usuario'});
+            }
+
+            const response=await this._service.getMyCommentsByTaskId(id,userId);
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las tareas del usuario'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});  
         }
     }
 
