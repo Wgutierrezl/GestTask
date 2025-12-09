@@ -4,12 +4,13 @@ dotenv.config();
 import express, { Application } from 'express';
 import cors from 'cors';
 import connectDB from './config/config-mongodb';
-import UserRoutes from './routes/user.routes'
+/* import UserRoutes from './routes/user.routes'
 import PipeRoutes from './routes/pipeline.routes';
 import TaskRoutes from './routes/task.routes';
 import BoardRouter from './routes/board.routes';
 import CommentRouter from './routes/comments.routes'
-import BmRouter from './routes/boardMember.routes'
+import BmRouter from './routes/boardMember.routes' */
+import router from './routes/index.router';
 import { swaggerSetUp } from './config/swagger-config';
 
 const PORT = process.env.PORT || 3000;
@@ -24,7 +25,7 @@ async function start() {
 		app.use(cors());
 		app.use(express.json());
 
-		app.use('/users',UserRoutes)
+		/* app.use('/users',UserRoutes)
 
 		app.use('/boards',BoardRouter);
 
@@ -34,7 +35,9 @@ async function start() {
 
 		app.use('/tasks', TaskRoutes);
 
-		app.use('/comments',CommentRouter);
+		app.use('/comments',CommentRouter); */
+
+		app.use('/api',router);
 
 		// Health check (útil para comprobar que el servidor responde)
 		app.get('/health', (_req, res) => {
