@@ -14,6 +14,8 @@ import router from './routes/index.router';
 import { swaggerSetUp } from './config/swagger-config';
 
 const PORT = process.env.PORT || 3000;
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") ?? [];
+console.log("CORS Allowed Origins:", allowedOrigins);
 
 async function start() {
 	try {
@@ -22,7 +24,20 @@ async function start() {
 		console.log('Conexión a la base de datos verificada. Montando servidor...');
 
 		const app: Application=express();
-		app.use(cors());
+		app.use(cors({
+			origin: function(origin, callback) {
+			// si no viene origin (ej Postman) permitir
+			if (!origin) return callback(null, true);
+
+			if (allowedOrigins.includes(origin)) {
+				return callback(null, true);
+			}
+
+			return callback(new Error('Not allowed by CORS'));
+		},
+		credentials: true
+		}));
+
 		app.use(express.json());
 
 		/* app.use('/users',UserRoutes)

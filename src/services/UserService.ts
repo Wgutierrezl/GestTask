@@ -73,8 +73,8 @@ export class UserService implements IUserService{
         Session.userId=user._id;
         Session.nombre=user.nombre;
         Session.token=token;
-
-
+        Session.rol=user.rol;
+        
         return Session;
 
     }
