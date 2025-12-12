@@ -21,10 +21,15 @@ export class BoardController{
         this._service=new BoardService(repo, boardMember);
     }
 
-    createBoard=async(req:Request, res:Response) : Promise<Response> =>{
+    createBoard=async(req:AuthRequest, res:Response) : Promise<Response> =>{
         try{
+            const ownerId=req.user?.id;
+            if(!ownerId){
+                return res.status(400).json({message:'no encontramos el id del usuario dentro del token'});
+            }
+
             const dto:BoardDTO=req.body;
-            const boardCreated=await this._service.createBoard(dto);
+            const boardCreated=await this._service.createBoard(dto,ownerId);
             if(boardCreated==null){
                 return res.status(400).json({message:"no hemos logrado crear el tablero"});
             }

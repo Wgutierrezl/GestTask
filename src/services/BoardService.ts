@@ -33,12 +33,12 @@ export class BoardService implements IBoardService{
     }
 
 
-    async createBoard(data: BoardDTO): Promise<BoardInfoDTO | null> {
+    async createBoard(data: BoardDTO, ownerId:string): Promise<BoardInfoDTO | null> {
         const board=new BoardEntity();
 
         board.nombre=data.nombre;
         board.descripcion=data.descripcion;
-        board.ownerId=data.ownerId;
+        board.ownerId=ownerId
 
         /* if(data.miembros && data.miembros.length>0){
             board.miembros=data.miembros;

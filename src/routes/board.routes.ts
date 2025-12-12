@@ -34,9 +34,6 @@ const boardController=new BoardController();
  *               descripcion:
  *                 type: string
  *                 example: este es un tablero para la descripcion
- *               ownerId:
- *                 type: string
- *                 example: asd1221
  *     responses:
  *       201:
  *         description: Tablero creado correctamente

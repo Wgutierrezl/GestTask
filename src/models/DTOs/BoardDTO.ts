@@ -1,7 +1,7 @@
 export class BoardDTO{
     nombre!: string;
     descripcion! : string;
-    ownerId!: string;
+    /* ownerId!: string; */
     /* miembros?: [] */
     /* pipelines? : [] */
 }
