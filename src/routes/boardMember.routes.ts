@@ -109,6 +109,7 @@ router.put('/updateBoardMemberById/:id',
             requireBoardRole(['owner']),
             bm_Controller.updateBoardMemberById);
 
+
 /**
  * @swagger
  * /boardMembers/getAllBoardsMembersByUserId/{userId}:
@@ -135,6 +136,7 @@ router.put('/updateBoardMemberById/:id',
  *         description: Error al obtener los tableros del usuario
  */
 router.get('/getAllBoardsMembersByUserId/:userId',bm_Controller.getAllBoardMemberByUserId);
+
 
 /**
  * @swagger
@@ -163,6 +165,35 @@ router.get('/getAllBoardsMembersByUserId/:userId',bm_Controller.getAllBoardMembe
  */
 router.get('/getAllMemberByBoardId/:boardId',bm_Controller.getAllMembersByBoardId);
 
+
+/**
+ * @swagger
+ * /boardMembers/getMemberByBoardIdAndUser/{boardId}:
+ *   get:
+ *     summary: Obtener miembro del tablero por tablero Id
+ *     tags: [Board_Members]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: boardId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero
+ *     responses:
+ *       200:
+ *         description: Miembro del tablero encontrado
+ *       404:
+ *         description: Miembro del tablero no encontrado
+ *       403:
+ *         description: Rol no autorizado
+ *       500:
+ *         description: Error al obtener los tableros del usuario
+ */
+router.get('/getMemberByBoardIdAndUser/:boardId', authMiddleware(['admin','usuario']), bm_Controller.getMemberByBoardId);
+
+
 /**
  * @swagger
  * /boardMembers/getBoardMemberById/{id}:
@@ -189,6 +220,7 @@ router.get('/getAllMemberByBoardId/:boardId',bm_Controller.getAllMembersByBoardI
  *         description: Error al obtener los tableros del usuario
  */
 router.get('/getBoardMemberById/:id',bm_Controller.getBoardMemberById);
+
 
 /**
  * @swagger

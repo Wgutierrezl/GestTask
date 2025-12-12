@@ -1,4 +1,5 @@
 import { IBUsersService } from "../interfaces/IBUsers/IBUsersService";
+import { AuthRequest } from "../middleware/genericMiddleware";
 import { BoardsUsersDTO } from "../models/DTOs/BoardsUsersDTO";
 import { BUsersRepository } from "../repositories/BUsersRepository";
 import { BUsersService } from "../services/BUsersService";
@@ -84,6 +85,32 @@ export class BoardMemberController{
             }
 
             const boardMembers=await this._service.getBoardMemberByBoardId(boardId);
+            if(!boardMembers){
+                return res.status(400).json({message:'aun no hay usuarios agregados a este tablero'});
+            }
+
+            return res.status(200).json(boardMembers);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error.message | error}`});
+        }
+    }
+
+    //ENDPOINT TO GET BOARD_MEMBER BY USER ID AND BOARD_ID
+    getMemberByBoardId=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+
+            const userId=req.user?.id;
+            if(!userId){
+                return res.status(400).json({message:'no hemos identificado tu id dentro del token'});
+            }
+
+            const {boardId}=req.params;
+            if(!boardId){
+                return res.status(400).json({message:'debes de digitar el id'});
+            }
+
+            const boardMembers=await this._service.getBoardMemberByUserAndBoardId(userId,boardId);
             if(!boardMembers){
                 return res.status(400).json({message:'aun no hay usuarios agregados a este tablero'});
             }

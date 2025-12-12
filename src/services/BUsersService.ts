@@ -13,6 +13,16 @@ export class BUsersService implements IBUsersService{
 
     }
 
+    //METHOD TO GET BOARD_MEMBER BY USER ID AND BOARD ID
+    async getBoardMemberByUserAndBoardId(userId: string, boardId: string): Promise<any> {
+        const member=await this._repo.getBoardMemberByUserAndBoardId(userId, boardId);
+        if(!member || member.length===0){
+            return null;
+        }
+
+        return member;
+    }
+
     //METHOD TO GEL ALL MEMBER BY BOARD ID
     async getBoardMemberByBoardId(boardId: string): Promise<any[] | null> {
         const member=await this._repo.getBoardMemberByBoardId(boardId);
@@ -113,7 +123,6 @@ export class BUsersService implements IBUsersService{
 
         return deletedMember;
     }
-
 
 
     private fillObjectBoardMemer(data:any) : BUserInfoDTO {

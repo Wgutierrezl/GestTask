@@ -5,6 +5,14 @@ import { TableroUsuario } from "../models/entities/BoardsUsers";
 import { BUsersEntity } from "../models/entities/BUsersEntity";
 
 export class BUsersRepository implements IBUsersRepository{
+    
+    //METHOD TO GET BOARD_MEMBER BY USERID AND BOARD_ID
+    async getBoardMemberByUserAndBoardId(userId: string, boardId: string): Promise<any> {
+        return await TableroUsuario.findOne({
+            usuarioId:userId,
+            tableroId:boardId
+        });
+    }
 
     //METHOD TO GET ALL MEMBER BY BOARD_ID
     async getBoardMemberByBoardId(boardId: string): Promise<any[]> {
