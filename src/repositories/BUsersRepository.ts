@@ -16,7 +16,9 @@ export class BUsersRepository implements IBUsersRepository{
 
     //METHOD TO GET ALL MEMBER BY BOARD_ID
     async getBoardMemberByBoardId(boardId: string): Promise<any[]> {
-        return await TableroUsuario.find({tableroId:boardId});
+        return await TableroUsuario
+            .find({tableroId:boardId})
+            .populate('usuarioId','_id nombre apellido correo rol');
     }
 
     //METHOD TO ADD MEMBER INTO THE BOARD
