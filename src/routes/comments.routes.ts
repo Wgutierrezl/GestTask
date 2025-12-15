@@ -41,10 +41,6 @@ const commentController=new CommentsController();
  *                 type: string
  *                 description: ID de la tarea
  *                 example: "673be10c5d3fbb0608c036e1"
- *               usuarioId:
- *                 type: string
- *                 description: ID del usuario que comenta
- *                 example: "672aa94b13f37f87d44b821c"
  *               mensaje:
  *                 type: string
  *                 description: Texto del comentario

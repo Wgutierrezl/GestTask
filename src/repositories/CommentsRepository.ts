@@ -7,10 +7,11 @@ import mongoose from "mongoose";
 export class CommentsRepository implements ICommentsRepository{
 
     async getMyCommentsByTaskId(id: string, userId: string): Promise<any[]> {
-        return await Comments.find({
-            usuarioId:userId,
-            tareaId:id
-        });
+        return await Comments
+            .find({
+                usuarioId:userId,
+                tareaId:id
+            });
     }
     async deleteCommentById(id: string): Promise<any> {
         const result=await Comments.deleteOne({_id:new mongoose.Types.ObjectId(id)});
@@ -25,7 +26,8 @@ export class CommentsRepository implements ICommentsRepository{
 
     //METHOD TO GET ALL COMMENTS BY TASK ID
     async getAllCommentsByTaskId(id: string): Promise<any[]> {
-        return await Comments.find({tareaId:id});
+        return await Comments.find({tareaId:id})
+                             .populate('usuarioId','_id nombre apellido correo rol');
     }
 
     //METHOD TO UODATE TASK BY ID AND DATA

@@ -23,7 +23,6 @@ export class FileInputDTO{
 
 export class CreateCommentDTO{
     tareaId!: string;
-    usuarioId!: string;
     mensaje!: string;
     archivos?: FileInputDTO[];
 }

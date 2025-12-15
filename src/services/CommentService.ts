@@ -89,10 +89,10 @@ export class CommentService implements ICommentsService{
 
 
     //METHOD TO CREATE A COMMENT AND INTEGRATION WITH B2 SERVICES : BACK BLAZE
-    async createComment(data: CreateCommentDTO): Promise<CommentsInfo | null> {
+    async createComment(data: CreateCommentDTO, userId:string): Promise<CommentsInfo | null> {
 
         // 1. Validación básica
-        if (!data.tareaId || !data.usuarioId || !data.mensaje) {
+        if (!data.tareaId || !data.mensaje) {
             throw new Error("Faltan datos requeridos");
         }
 
@@ -100,61 +100,14 @@ export class CommentService implements ICommentsService{
         
         let finalFiles: any[]=[];
 
-        // ────────────────────────────
-            // 2. Validar si vienen archivos
-        // ────────────────────────────
-        /* if(data.archivos && data.archivos.length>0){
-
-            try{
-                console.log('empezamos a leer los archivos mandados');
-                for(const archivo of data.archivos){
-
-                if (!archivo.buffer || !archivo.originalName) {
-                    continue; // ignora archivos inválidos
-                }
-
-                // Generar nombre único para Backblaze
-                const nombreFinal = `${Date.now()}-${archivo.originalName}`;
-                console.log(`nombre del archivo mandado ${nombreFinal}`);
-
-
-                console.log('Empezamos a subir el archivo a lo que es el bucket de b2');
-                const fileName=await this._b2.uploadFile(
-                    archivo.buffer,
-                    nombreFinal
-                );
-
-                console.log(`nombre del archivo generado dentro del bucket, guardamos solo la ruta ${fileName}`);
-
-                //Montamos las url dadas y los nombres de los archivos
-                finalFiles.push({
-                    nombre: fileName,
-                    url:fileName,
-                    tamaño: archivo.size ? archivo.size.toString() :'0'
-                });
-
-                console.log(`ahora miramos como queda guardado dentro de la lista que nos guarda las rutas ${finalFiles}`);
-
-            }
-
-            console.log('Terminados el ciclo for que guardaba los archivos dentro de el bucket');
-            console.log(`archivos generados al final ${finalFiles}`);
-
-            }catch(error:any){
-                console.log(`ha ocurrido un error inesperado ${error}`);
-            }
-            
-        } */
-
-        //WE UPLOAD THE FILES INTO THE ARRAY 
-        /* finalFiles=await this.uploadNewFileIntoB2ByUpdate(finalFiles, data); */
+        // 2. Subir archivos a Backblaze B2 si existen
 
         finalFiles=await this.uploadNewFileIntoB2ByUpdate(finalFiles, data.archivos ?? []);
 
         
         //WE FILL THE REST ATTRIBUTES
         comment.tareaId=data.tareaId;
-        comment.usuarioId=data.usuarioId;
+        comment.usuarioId=userId;
         comment.mensaje=data.mensaje;
         comment.estado='activo';
         comment.fechaCreacion=new Date();

@@ -16,6 +16,8 @@ export const requireBoardRole = (allowedRoles: string[] = []) => {
                 tableroId: tableroId
             });
 
+            console.log("Miembro encontrado:", miembro);
+
             if (!miembro) return res.status(403).json({ message: "No perteneces a este tablero" });
 
             if (!allowedRoles.includes(miembro.rol)) {

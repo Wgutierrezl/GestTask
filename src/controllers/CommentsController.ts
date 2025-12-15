@@ -22,11 +22,16 @@ export class CommentsController{
 
 
     //ENDPOINT TO CREATE A COMMENT
-    createComment=async(req:Request, res:Response) : Promise<Response> => {
+    createComment=async(req:AuthRequest, res:Response) : Promise<Response> => {
         try{
+
+            const userId=req.user?.id;
+            if(!userId){
+                return res.status(400).json({message:'el token no nos proporciona el id del usuario'});
+            }
+
             const dto:CreateCommentDTO={
                 tareaId:req.body.tareaId,
-                usuarioId:req.body.usuarioId,
                 mensaje:req.body.mensaje,
                 archivos:[]
             };
@@ -65,7 +70,7 @@ export class CommentsController{
             })); */
 
 
-            const commentCreated=await this._service.createComment(dto);
+            const commentCreated=await this._service.createComment(dto, userId);
             if(commentCreated==null){
                 return res.status(400).json({message:'no hemos logrado crear el comentario'});
             }
