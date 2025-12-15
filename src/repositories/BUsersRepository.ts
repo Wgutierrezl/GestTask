@@ -8,10 +8,12 @@ export class BUsersRepository implements IBUsersRepository{
     
     //METHOD TO GET BOARD_MEMBER BY USERID AND BOARD_ID
     async getBoardMemberByUserAndBoardId(userId: string, boardId: string): Promise<any> {
-        return await TableroUsuario.findOne({
-            usuarioId:userId,
-            tableroId:boardId
-        });
+        return await TableroUsuario
+            .findOne({
+                usuarioId:userId,
+                tableroId:boardId
+            })
+            .populate('usuarioId','_id nombre apellido correo rol');
     }
 
     //METHOD TO GET ALL MEMBER BY BOARD_ID
