@@ -22,10 +22,15 @@ export class PipelinesService implements IPipelinesService{
             return null;
         }
 
-        //then, we delete all tasks related to the pipeline
-        const deletedTasks=await this._taskService.deleteTasksByPipelineId(id);
-        if(!deletedTasks){
-            throw new Error('no hemos logrado eliminar las tareas relacionadas al pipeline');
+        //then, we get all tasks related to the pipeline
+        const tasks=await this._taskService.getAllTaskByPipelineId(id);
+        if(tasks && tasks.length>0){
+
+            //then, we delete all tasks related to the pipeline
+            const deletedTasks=await this._taskService.deleteTasksByPipelineId(id);
+            if(!deletedTasks){
+                throw new Error('no hemos logrado eliminar las tareas relacionadas al pipeline');
+            }
         }
 
         //finally, we delete the pipeline

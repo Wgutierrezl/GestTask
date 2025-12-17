@@ -11,5 +11,8 @@ export interface ICommentsService{
     getCommentById(id:string) : Promise<CommentsInfo | null>;
     downloadFile(commentId:string, fileId:string) : Promise<SessionFileDTO | null>;
     deleteComment(id:string) : Promise<boolean | null>;
+
+    //METHOD TO DELETE COMMENTS BY TASK ID - CASCADE DELETE
     deleteCommentsByTaskId(taskId:string[]) : Promise<boolean | null>;
+    getCommentsByTaskId(tasksId:string[]) : Promise<any[]>;
 }

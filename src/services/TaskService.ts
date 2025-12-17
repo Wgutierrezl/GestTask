@@ -26,14 +26,20 @@ export class TaskService implements ITaskService{
             return null;
         }
 
+        //We create an array of task IDs
         const tasksId=tasks.map(task=>task._id.toString());
-        
-        //Then, we search and delete all comments related to the array of tasks
-        const deletedComments=await this._commentsService.deleteCommentsByTaskId(tasksId);
-        if(!deletedComments){
-            throw new Error('no hemos logrado eliminar los comentarios de las tareas');
-        }
 
+        //Then, we get all comments related to the array of tasks
+        const comments=await this._commentsService.getCommentsByTaskId(tasksId);
+        if(comments && comments.length>0)
+        {
+            //Then, we delete all comments related to the tasks
+            const deletedComments=await this._commentsService.deleteCommentsByTaskId(tasksId);
+            if(!deletedComments){
+                throw new Error('no hemos logrado eliminar los comentarios de las tareas');
+            }
+        }
+        
         //Finally, we delete all tasks by pipeline id
         const deleted=await this._repo.deleteTasksByPipelineId(pipelineId);
         if(!deleted){
@@ -49,10 +55,15 @@ export class TaskService implements ITaskService{
             return null;
         }
 
-        //first, we delete all comments related to the task
-        const deletedComments=await this._commentsService.deleteCommentsByTaskId([id]);
-        if(!deletedComments){
-            throw new Error('no hemos logrado eliminar los comentarios de la tarea');
+        //first, we get all comments related to the task
+        const comments=await this._commentsService.getAllCommentsByTaskId(id);
+        if(comments && comments.length>0){
+
+            //then, we delete all comments related to the task
+            const deletedComments=await this._commentsService.deleteCommentsByTaskId([id]);
+            if(!deletedComments){
+                throw new Error('no hemos logrado eliminar los comentarios de la tarea');
+            }
         }
 
         //then, we delete the task

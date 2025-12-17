@@ -29,9 +29,10 @@ export class BoardService implements IBoardService{
             return null;
         }
 
-        //then, we delete all pipelines related to the board
+        //then, we get all pipelines related to the board
         const pipelines=await this._pipelineService.getPipelinesByBoardId(id);
         if(pipelines && pipelines.length>0){
+            //then, we delete all pipelines related to the board
             for(const pipe of pipelines){
                 const deletedPipes=await this._pipelineService.deletePipelinesById(pipe.id);
                 if(!deletedPipes){

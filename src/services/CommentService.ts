@@ -19,6 +19,15 @@ export class CommentService implements ICommentsService{
         this._b2=b2;
     }
 
+    //METHOD TO GET COMMENTS BY TASK IDS
+    async getCommentsByTaskId(tasksId: string[]): Promise<any[]> {
+        const response=await this._repo.getCommentsByTaskId(tasksId);
+        if(!response || response.length===0){
+            return [];
+        }
+        return response;
+    }
+
     //METHOD TO DELETE COMMENTS BY TASK ID
     async deleteCommentsByTaskId(taskId: string[]): Promise<boolean | null> {
         try{
