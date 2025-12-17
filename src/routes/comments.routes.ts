@@ -239,6 +239,60 @@ router.delete('/deleteCommentById/:id/boardId/:tableroId',
             requireBoardRole(['owner']),
             commentController.deleteComment);
 
+
+/**
+ * @swagger
+ * /comments/deleteCommentByTaskId/{taskId}/boardId/{tableroId}:
+ *   delete:
+ *     summary: Eliminar un comentario por tareaId
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la tarea para eliminar los comentarios asociados
+ *
+ *       - in: path
+ *         name: tableroId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero relacionado
+ *
+ *     responses:
+ *       200:
+ *         description: Comentario eliminado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: "Comentario eliminado correctamente"
+ *
+ *       400:
+ *         description: Solicitud inválida
+ *
+ *       401:
+ *         description: No autorizado (token inválido o ausente)
+ *
+ *       403:
+ *         description: No tienes permisos para eliminar el comentario
+ *
+ *       404:
+ *         description: Comentario no encontrado
+ *
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/deleteCommentByTaskId/:taskId/boardId/:tableroId',
+                authMiddleware(['admin','usuario']),
+                requireBoardRole(['owner']),
+                commentController.deleteCommentsByTaskId);
+
 /**
  * @swagger
  * /comments/getAllCommentsByTaskId/{taskId}:

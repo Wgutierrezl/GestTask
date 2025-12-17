@@ -7,23 +7,40 @@ import { BoardEntity } from "../models/entities/BoardsEntity";
 import { BoardUpdateDTO } from "../models/DTOs/BoardUpdateDTO";
 import { IBUsersService } from "../interfaces/IBUsers/IBUsersService";
 import { BoardsUsersDTO } from "../models/DTOs/BoardsUsersDTO";
+import { IPipelinesService } from "../interfaces/iPipelines/IPipelinesService";
 
 export class BoardService implements IBoardService{
 
     private readonly _repo:IBoardRepository
     private readonly _boardMember: IBUsersService;
+    private readonly _pipelineService: IPipelinesService;
 
-    constructor(repo:IBoardRepository, boardMember:IBUsersService){
+    constructor(repo:IBoardRepository, boardMember:IBUsersService, pipelineService:IPipelinesService){
         this._repo=repo;
         this._boardMember=boardMember;
+        this._pipelineService=pipelineService;
     }
     
     async deleteBoardById(id: string): Promise<any | null> {
+
+        //first, we search for the board
         const board=await this._repo.getBoardById(id);
         if(board==null){
             return null;
         }
 
+        //then, we delete all pipelines related to the board
+        const pipelines=await this._pipelineService.getPipelinesByBoardId(id);
+        if(pipelines && pipelines.length>0){
+            for(const pipe of pipelines){
+                const deletedPipes=await this._pipelineService.deletePipelinesById(pipe.id);
+                if(!deletedPipes){
+                    throw new Error('no hemos logrado eliminar los pipelines relacionados al tablero');
+                }
+            }
+        }
+
+        //finally, we delete the board
         const boardDeleted=await this._repo.deleteBoardById(id);
         if(!boardDeleted){
             throw new Error('no hemos logrado borrar el tablero');

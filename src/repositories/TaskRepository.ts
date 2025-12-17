@@ -6,6 +6,11 @@ import { TaskEntity } from "../models/entities/TaskEntity";
 
 export class TaskRepository implements ITaskRepository{
 
+    //METHOD TO DELETE TASKS BY PIPELINE ID
+    async deleteTasksByPipelineId(pipelineId: string): Promise<any> {
+        return await Tarea.deleteMany({pipelineId: pipelineId});
+    }
+
     //METHOD TO DELETE A TASK
     async deleteTask(id: string): Promise<any> {
         const result=await Tarea.deleteOne({_id:new mongoose.Types.ObjectId(id)});
@@ -24,7 +29,7 @@ export class TaskRepository implements ITaskRepository{
     }
 
     //METHOD TO GET ALL TASK BY PIPELINEID
-    async getAllTaskByPipelineId(id: string): Promise<TaskEntity[]> {
+    async getAllTaskByPipelineId(id: string): Promise<any[]> {
         return await Tarea.find({pipelineId:id});
         
     }

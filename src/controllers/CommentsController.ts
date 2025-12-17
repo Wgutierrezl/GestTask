@@ -242,4 +242,24 @@ export class CommentsController{
         }
     }
 
+
+    //ENDPOINT TO DELETE COMMENTS BY TASK ID - CASCADE DELETE
+    deleteCommentsByTaskId=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const {taskId}=req.params;
+            if(!taskId){
+                return res.status(400).json({message:'debes de digitar el id de la tarea'});
+            }
+
+            const deleted=await this._service.deleteCommentsByTaskId([taskId]);
+            if(!deleted){
+                return res.status(400).json({message:'no hemos logrado eliminar los comentarios de la tarea'});
+            }
+            return res.status(200).json({message:'comentarios eliminados correctamente', success:deleted});
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
 }

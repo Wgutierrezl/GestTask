@@ -1,23 +1,34 @@
 import { IPipelinesRepository } from "../interfaces/iPipelines/IPipelinesRepository";
 import { IPipelinesService } from "../interfaces/iPipelines/IPipelinesService";
-import { pipelinesDTO } from "../models/DTOs/PipelinesDTO";
+import { ITaskService } from "../interfaces/iTask/ITaskService";
+import { pipelinesDTO, PipelinesInfoDTO } from "../models/DTOs/PipelinesDTO";
 import { PipeUpdateDTO } from "../models/DTOs/PipeUpdateDTO";
 import { PipelinesEntity } from "../models/entities/PipelinesEntity";
 
 export class PipelinesService implements IPipelinesService{
 
     private readonly _repo:IPipelinesRepository;
+    private readonly _taskService: ITaskService;
 
-    constructor(repo:IPipelinesRepository){
+    constructor(repo:IPipelinesRepository, taskService: ITaskService){
         this._repo=repo;
+        this._taskService=taskService;
     }
 
     async deletePipelinesById(id: string): Promise<any> {
+        //first, we search for the pipeline
         const pipeline=await this._repo.getPipelinesById(id);
-        if(pipeline==null){
+        if(pipeline==null || pipeline.length===0){
             return null;
         }
 
+        //then, we delete all tasks related to the pipeline
+        const deletedTasks=await this._taskService.deleteTasksByPipelineId(id);
+        if(!deletedTasks){
+            throw new Error('no hemos logrado eliminar las tareas relacionadas al pipeline');
+        }
+
+        //finally, we delete the pipeline
         const deleted=await this._repo.deletePipelinesById(id);
         if(!deleted){
             throw new Error('no hemos logrado eliminar el pipeline');
@@ -93,13 +104,29 @@ export class PipelinesService implements IPipelinesService{
         return response;
     }
 
-    async getPipelinesByBoardId(boardId: string): Promise<pipelinesDTO[] | null> {
-        const response=await this._repo.getPipelinesByBoardId(boardId);
-        if(response?.length===0 || response==null){
-            return null;
+    async getPipelinesByBoardId(boardId: string): Promise<PipelinesInfoDTO[]> {
+        const pipelines = await this._repo.getPipelinesByBoardId(boardId);
+
+        if (!pipelines || pipelines.length === 0) {
+            return [];
         }
 
-        return response;
+        return pipelines.map(pipe => {
+            const dto = new PipelinesInfoDTO();
+
+            dto.id = pipe._id.toString();
+            dto.nombre = pipe.nombre;
+            dto.descripcion = pipe.descripcion;
+            dto.estado = pipe.estado;
+            dto.tableroId = pipe.tableroId.toString?.() ?? pipe.tableroId;
+            dto.etapas = pipe.etapas.map((etapa: any) => ({
+                _id: etapa._id,
+                nombre: etapa.nombre,
+                orden: etapa.orden
+            }));
+
+            return dto;
+        });
     }
 
 

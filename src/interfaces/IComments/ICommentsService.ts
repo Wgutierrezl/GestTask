@@ -11,4 +11,5 @@ export interface ICommentsService{
     getCommentById(id:string) : Promise<CommentsInfo | null>;
     downloadFile(commentId:string, fileId:string) : Promise<SessionFileDTO | null>;
     deleteComment(id:string) : Promise<boolean | null>;
+    deleteCommentsByTaskId(taskId:string[]) : Promise<boolean | null>;
 }

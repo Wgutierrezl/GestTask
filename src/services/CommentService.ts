@@ -19,6 +19,35 @@ export class CommentService implements ICommentsService{
         this._b2=b2;
     }
 
+    //METHOD TO DELETE COMMENTS BY TASK ID
+    async deleteCommentsByTaskId(taskId: string[]): Promise<boolean | null> {
+        try{
+
+            //FIRST, WE GET SEARCH ALL COMMENTS FILES BY THE ARRAY OF TASK IDS
+            const commentsFiles=await this._repo.getCommentsByTaskId(taskId);
+            if(commentsFiles && commentsFiles.length>0){
+                for(const comment of commentsFiles){
+                    for(const file of comment.archivos){
+                        console.log(`accediento a el nombre del archivo ${file.nombre}`);
+                        await this._b2.deleteFile(file.nombre);
+                        console.log('archivo eliminado hasta este momento');
+                    }
+                }
+            }
+
+            //NOW WE PROCEED TO DELETE THE COMMENTS BY THE ARRAY OF TASK IDS
+            const commentsDeleted=await this._repo.deleteCommentsByTaskIdCascade(taskId);
+            console.log(`verificacion de eliminacion de los comentarios ${commentsDeleted}`);
+            if(commentsDeleted.deletedCount===0){
+                return false;
+            }
+            return true;
+        }catch(error:any){
+            console.log(`ha ocurrido un error inesperado ${error}`);
+            throw new Error(`ha ocurrido un error inesperado ${error}`);
+        }
+    }
+
     //METHOD TO GET ALL MY COMMENTS BY TASK ID
     async getMyCommentsByTaskId(id: string, userId: string): Promise<CommentsInfo[] | null> {
         const response=await this._repo.getMyCommentsByTaskId(id, userId);

@@ -476,6 +476,7 @@ router.get('/getMyTaskByPipelineId/:pipelineId/boardId/:boardId',
  */
 router.get('/getTaskById/:id',authMiddleware(['admin','usuario']),taskController.getTaskById);
 
+
 /**
  * @swagger
  * /tasks/deleteTaskById/{id}/boardId/{tableroId}:
@@ -521,6 +522,52 @@ router.delete('/deleteTaskById/:id/boardId/:tableroId',
                 authMiddleware(['admin','usuario']),
                 requireBoardRole(['owner','miembro']),
                 taskController.deleteTask);
+
+/**
+ * @swagger
+ * /tasks/deleteTaskByPipelineId/{pipelineId}/boardId/{tableroId}:
+ *   delete:
+ *     summary: Eliminar un tareas por PipelineId
+ *     tags: [Task]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: pipelineId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero a eliminar
+ *       - in: path
+ *         name: tableroId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero al que pertenece la tarea
+ *     responses:
+ *       200:
+ *         description: Tarea eliminada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: "Tarea eliminado exitosamente"
+ *       400:
+ *         description: Parámetros inválidos
+ *       401:
+ *         description: No autorizado
+ *       403:
+ *         description: Acceso denegado (debes ser owner del tablero)
+ *       404:
+ *         description: Tarea no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/deleteTaskByPipelineId/:pipelineId/boardId/:tableroId',
+                authMiddleware(['admin','usuario']),
+                requireBoardRole(['owner','miembro']),
+                taskController.deleteTaskByPipelineId);
 
 
 export default router;

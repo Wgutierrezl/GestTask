@@ -6,7 +6,7 @@ export interface IPipelinesRepository{
     createPipelines(data:PipelinesEntity): Promise<any>;
     getPipelinesById(id:string): Promise<any | null>;
     getAllPipelines(): Promise<PipelinesEntity[] | null>; 
-    getPipelinesByBoardId(boardId:string): Promise<PipelinesEntity[] | null>;
+    getPipelinesByBoardId(boardId:string): Promise<any[] | null>;
     updatePipelines(data:PipeUpdateDTO) : Promise<any>;
     deletePipelinesById(id:string) : Promise<any>;
 }

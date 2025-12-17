@@ -26,7 +26,7 @@ export class PipelinesRepository implements IPipelinesRepository{
     async getAllPipelines(): Promise<PipelinesEntity[] | null> {
         return await Pipeline.find();
     }
-    async getPipelinesByBoardId(boardId: string): Promise<PipelinesEntity[] | null> {
+    async getPipelinesByBoardId(boardId: string): Promise<any[] | null> {
         return await Pipeline.find({tableroId:boardId});
     }
     

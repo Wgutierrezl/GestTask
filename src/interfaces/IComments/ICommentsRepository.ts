@@ -8,4 +8,8 @@ export interface ICommentsRepository{
     updateCommentsById(data:CommentUpdateDTO) : Promise<any>;
     getCommentById(id:string) : Promise<any>;
     deleteCommentById(id:string) : Promise<any>;
+
+    //METHOD TO DELETE COMMENTS BY TASK ID - CASCADE DELETE
+    deleteCommentsByTaskIdCascade(taskId:string[]) : Promise<any>;
+    getCommentsByTaskId(tasksId:string[]) : Promise<any[]>;
 }

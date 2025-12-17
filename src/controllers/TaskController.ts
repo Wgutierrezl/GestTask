@@ -5,6 +5,9 @@ import { TaskService } from "../services/TaskService";
 import { TaskDTO } from "../models/DTOs/TaskDTO";
 import { promises } from "dns";
 import { AuthRequest } from "../middleware/genericMiddleware";
+import { CommentsRepository } from "../repositories/CommentsRepository";
+import { B2Service } from "../services/B2Service";
+import { CommentService } from "../services/CommentService";
 
 export class TaskController{
 
@@ -12,8 +15,11 @@ export class TaskController{
 
     constructor(){
         const repo=new TaskRepository();
+        const commentRepo=new CommentsRepository()
+        const b2Service=new B2Service();
+        const commentService=new CommentService(commentRepo, b2Service);
 
-        this._service=new TaskService(repo);
+        this._service=new TaskService(repo, commentService);
     }
 
 
@@ -149,6 +155,24 @@ export class TaskController{
 
             return res.status(204).json({message:'tarea eliminada correctamente'});
 
+
+        }catch(error:any){
+            console.log(error);
+            return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
+        }
+    }
+
+    deleteTaskByPipelineId=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const {pipelineId}=req.params;
+            if(!pipelineId){
+                return res.status(400).json({message:'debes de digitar el id del pipeline'});
+            }
+            const deleted=await this._service.deleteTasksByPipelineId(pipelineId);
+            if(!deleted){
+                return res.status(400).json({message:'no hemos logrado eliminar las tareas del pipeline'});
+            }
+            return res.status(200).json({message:'tareas eliminadas correctamente', success:deleted});
 
         }catch(error:any){
             console.log(error);

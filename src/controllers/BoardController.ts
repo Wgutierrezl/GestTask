@@ -9,6 +9,13 @@ import { BUsersService } from "../services/BUsersService";
 import { IBUsersService } from "../interfaces/IBUsers/IBUsersService";
 import { BUsersRepository } from "../repositories/BUsersRepository";
 import { AuthRequest } from "../middleware/genericMiddleware";
+import { PipelinesRepository } from "../repositories/PipelinesRepository";
+import { PipelinesService } from "../services/PipelinesService";
+import { TaskRepository } from "../repositories/TaskRepository";
+import { TaskService } from "../services/TaskService";
+import { CommentsRepository } from "../repositories/CommentsRepository";
+import { B2Service } from "../services/B2Service";
+import { CommentService } from "../services/CommentService";
 
 export class BoardController{
 
@@ -18,7 +25,14 @@ export class BoardController{
         const repo=new BoardRepository();
         const _repoMember=new BUsersRepository()
         const boardMember=new BUsersService(_repoMember)
-        this._service=new BoardService(repo, boardMember);
+        const pipeRepo=new PipelinesRepository;
+        const taskRepo=new TaskRepository();
+        const commentRepo=new CommentsRepository();
+        const b2Service=new B2Service();
+        const commentService=new CommentService(commentRepo, b2Service);
+        const taskService=new TaskService(taskRepo,commentService);
+        const pipeService=new PipelinesService(pipeRepo, taskService);
+        this._service=new BoardService(repo, boardMember, pipeService);
     }
 
     createBoard=async(req:AuthRequest, res:Response) : Promise<Response> =>{

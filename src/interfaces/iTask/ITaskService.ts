@@ -9,4 +9,5 @@ export interface ITaskService{
     getTaskById(id:string) : Promise<TaskEntity | null>;
     updateTask(id:string, data:TaskDTO) : Promise<TaskUpdateDTO | null>;
     deleteTask(id:string) : Promise<any | null>;
+    deleteTasksByPipelineId(pipelineId:string) : Promise<any | null>;
 }

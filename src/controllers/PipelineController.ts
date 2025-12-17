@@ -3,6 +3,11 @@ import { IPipelinesService } from "../interfaces/iPipelines/IPipelinesService";
 import { PipelinesRepository } from "../repositories/PipelinesRepository";
 import { PipelinesService } from "../services/PipelinesService";
 import { pipelinesDTO } from "../models/DTOs/PipelinesDTO";
+import { TaskRepository } from "../repositories/TaskRepository";
+import { TaskService } from "../services/TaskService";
+import { CommentsRepository } from "../repositories/CommentsRepository";
+import { B2Service } from "../services/B2Service";
+import { CommentService } from "../services/CommentService";
 
 export class PipelineController{
 
@@ -10,8 +15,13 @@ export class PipelineController{
 
     constructor(){
         const pipe=new PipelinesRepository();
+        const taskRepo=new TaskRepository();
+        const commentRepo=new CommentsRepository();
+        const b2Service=new B2Service();
+        const commentService=new CommentService(commentRepo, b2Service);
+        const taskService=new TaskService(taskRepo, commentService);
 
-        this._service=new PipelinesService(pipe);
+        this._service=new PipelinesService(pipe, taskService);
     }
 
 

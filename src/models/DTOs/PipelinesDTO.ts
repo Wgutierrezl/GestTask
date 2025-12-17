@@ -11,3 +11,7 @@ export class pipelinesDTO{
     etapas!: EtapasDTO[]
 }
 
+export class PipelinesInfoDTO extends pipelinesDTO{
+    id!:string;
+}
+

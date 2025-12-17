@@ -6,6 +6,21 @@ import mongoose from "mongoose";
 
 export class CommentsRepository implements ICommentsRepository{
 
+    //METHOD TO GET COMMENTS BY TASK IDS - FOR CASCADE DELETE
+    async getCommentsByTaskId(tasksId: string[]): Promise<any[]> {
+        return await Comments.find({tareaId: { $in: tasksId }});
+    }
+
+    //METHOD TO DELETE COMMENTS BY TASK ID - CASCADE DELETE
+    async deleteCommentsByTaskIdCascade(taskId: string[]): Promise<any> {
+        return await Comments.deleteMany({tareaId: { $in: taskId }});
+    }
+
+
+    //-------------------------------------------------------------------------------//
+
+
+    //METHOD TO GET MY COMMENTS BY TASK ID
     async getMyCommentsByTaskId(id: string, userId: string): Promise<any[]> {
         return await Comments
             .find({
@@ -13,6 +28,8 @@ export class CommentsRepository implements ICommentsRepository{
                 tareaId:id
             });
     }
+
+    //METHOD TO DELETE A COMMENT BY ID
     async deleteCommentById(id: string): Promise<any> {
         const result=await Comments.deleteOne({_id:new mongoose.Types.ObjectId(id)});
         return result.deletedCount>0;   

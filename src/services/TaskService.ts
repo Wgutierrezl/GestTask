@@ -1,3 +1,4 @@
+import { ICommentsService } from "../interfaces/IComments/ICommentsService";
 import { ITaskRepository } from "../interfaces/iTask/ITaskRepository";
 import { ITaskService } from "../interfaces/iTask/ITaskService";
 import { TaskDTO } from "../models/DTOs/TaskDTO";
@@ -7,9 +8,38 @@ import { TaskEntity } from "../models/entities/TaskEntity";
 export class TaskService implements ITaskService{
 
     private readonly _repo:ITaskRepository
+    private readonly _commentsService: ICommentsService
 
-    constructor(repo:ITaskRepository){
+    constructor(repo:ITaskRepository, commentsService:ICommentsService){
         this._repo=repo;
+        this._commentsService=commentsService;
+
+    }
+
+    //METHOD TO DELETE TASKS BY PIPELINE ID
+    //First, we delete all comments related to the tasks in the pipeline, then we delete the tasks
+    async deleteTasksByPipelineId(pipelineId: string): Promise<any | null> {
+
+        //First, get all tasks by pipeline ID
+        const tasks=await this._repo.getAllTaskByPipelineId(pipelineId);
+        if(tasks.length===0 || tasks===null){
+            return null;
+        }
+
+        const tasksId=tasks.map(task=>task._id.toString());
+        
+        //Then, we search and delete all comments related to the array of tasks
+        const deletedComments=await this._commentsService.deleteCommentsByTaskId(tasksId);
+        if(!deletedComments){
+            throw new Error('no hemos logrado eliminar los comentarios de las tareas');
+        }
+
+        //Finally, we delete all tasks by pipeline id
+        const deleted=await this._repo.deleteTasksByPipelineId(pipelineId);
+        if(!deleted){
+            throw new Error('no hemos logrado eliminar las tareas');
+        }
+        return deleted;
     }
 
     //METHOD TO DELETE A TASK
@@ -19,6 +49,13 @@ export class TaskService implements ITaskService{
             return null;
         }
 
+        //first, we delete all comments related to the task
+        const deletedComments=await this._commentsService.deleteCommentsByTaskId([id]);
+        if(!deletedComments){
+            throw new Error('no hemos logrado eliminar los comentarios de la tarea');
+        }
+
+        //then, we delete the task
         const deleted=await this._repo.deleteTask(id);
         if(!deleted){
             throw new Error('no hemos logrado eliminar la tarea');
