@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
 import { authMiddleware } from "../middleware/genericMiddleware";
+import { checkOutAuth0JWT } from "../middleware/oauth.middleware";
 
 const router=Router();
 const userController=new UserController();
@@ -77,6 +78,9 @@ router.post('/registerUser',userController.createUser);
  *         description: Error al iniciar sesión
  */
 router.post('/loginUser',userController.loginUser);
+
+
+router.post('/oauth/oauth0',checkOutAuth0JWT, userController.loginOauth0);
 
 
 /**

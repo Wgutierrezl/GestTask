@@ -7,6 +7,7 @@ import { UserEntity } from "../models/entities/UserEntity";
 import { IhasherService } from "../custom/IHasherService";
 import { ITokenService } from "../custom/ITokenService";
 import { SessionDTO } from "../models/DTOs/SessionDTO";
+import { Payload } from "../models/DTOs/Payload";
 
 export class UserService implements IUserService{
 
@@ -18,6 +19,34 @@ export class UserService implements IUserService{
         this._repo=repo;
         this._token=token;
         this._hasher=hasher;
+    }
+
+    async loginOauth0(payload:Payload): Promise<SessionDTO> {
+        let user=await this._repo.getUserByEmail(payload.email);
+        if(!user){
+            const newUser=new UserEntity()
+            newUser.nombre=payload.nombre;
+            newUser.correo=payload.email;
+            newUser.contrasena='';
+            newUser.proveedorAuth='oauth0';
+            newUser.oauth0Id=payload.oauth0Id;
+            newUser.edad=25,
+            newUser.rol='admin',
+            newUser.fechaRegistro=new Date()
+
+            user=await this._repo.createUser(newUser);
+            console.log(`user created ${newUser}`);
+        }
+
+        const token=await this._token.generateToken(user);
+        console.log(`token generated ${token}`);
+
+        return {
+            userId:user._id,
+            nombre:user.nombre,
+            token:token,
+            rol:user.rol
+        }
     }
     
     async getAllUsers(): Promise<UserInfoDTO | null> {

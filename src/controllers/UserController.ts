@@ -8,6 +8,7 @@ import { UserRepository } from "../repositories/UserRepository";
 import { TokenService } from "../custom/TokenService";
 import { HasherService } from "../custom/HasherService";
 import { AuthRequest } from "../middleware/genericMiddleware";
+import { auth } from "express-oauth2-jwt-bearer";
 
 export class UserController{
 
@@ -44,6 +45,25 @@ export class UserController{
         }catch(error:any){
             console.error(error);
             return res.status(500).json({ message: "No hemos logrado logear a el usuario" });
+        }
+    }
+
+    loginOauth0=async(req:Request, res:Response) : Promise<Response> => {
+        try{
+            const {sub, email, name} = (req as any).auth.payload
+
+            const session=await this._service.loginOauth0({oauth0Id: sub,email:email, nombre:name});
+            if(!session){
+                return res.status(400).json({message:'no hemos logrado autenticar el usuario'});
+            }
+
+            return res.status(200).json(session);
+
+        }catch(error:any){
+            console.error(error);
+            return res.status(401).json({
+                message: 'Error al autenticar con OAuth0'
+            });
         }
     }
 
