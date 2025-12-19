@@ -35,6 +35,7 @@ export class UserController{
             return res.status(500).json({ message: "Error al registrar el usuario" });
         }
     }
+    
 
     loginUser=async(req:Request,res:Response):Promise<Response> => {
         try{
@@ -48,11 +49,17 @@ export class UserController{
         }
     }
 
+
     loginOauth0=async(req:Request, res:Response) : Promise<Response> => {
         try{
-            const {sub, email, name} = (req as any).auth.payload
+            /* const {sub, email, name} = (req as any).auth.payload */
 
-            const session=await this._service.loginOauth0({oauth0Id: sub,email:email, nombre:name});
+            const authHeader=req.headers.authorization;
+            if(!authHeader){
+                return res.status(401).json({ message: 'Token no enviado' });
+            }
+
+            const session=await this._service.loginOauth0(authHeader);
             if(!session){
                 return res.status(400).json({message:'no hemos logrado autenticar el usuario'});
             }
@@ -66,6 +73,7 @@ export class UserController{
             });
         }
     }
+
 
     getUserById=async(req:Request, res:Response): Promise<Response> => {
         try{

@@ -9,5 +9,5 @@ export interface IUserService{
     login(loginDTO:LoginDTO): Promise<SessionDTO | null>;
     getUserById(id:string): Promise<UserInfoDTO | null>;
     getAllUsers() : Promise<UserInfoDTO | null>;
-    loginOauth0(payload:Payload) : Promise<SessionDTO>;
+    loginOauth0(accessToken:string) : Promise<SessionDTO>;
 }

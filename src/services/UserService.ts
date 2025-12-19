@@ -8,7 +8,9 @@ import { IhasherService } from "../custom/IHasherService";
 import { ITokenService } from "../custom/ITokenService";
 import { SessionDTO } from "../models/DTOs/SessionDTO";
 import { Payload } from "../models/DTOs/Payload";
-
+import axios from "axios";
+import { error } from "console";
+import { Auth0UserInfoDTO } from "../models/DTOs/Auth0UserInfoDTO";
 export class UserService implements IUserService{
 
     private readonly _repo:IUserRepository;
@@ -21,24 +23,47 @@ export class UserService implements IUserService{
         this._hasher=hasher;
     }
 
-    async loginOauth0(payload:Payload): Promise<SessionDTO> {
-        let user=await this._repo.getUserByEmail(payload.email);
+    async loginOauth0(accessToken:string): Promise<SessionDTO> {
+        /* let user=await this._repo.getUserByEmail(payload.email); */
+
+        console.log(`token oauth0 : ${accessToken}`);
+
+        //we access
+        const userAuth0=await this.getUserInfoAuth0(accessToken);
+        if(!userAuth0){
+            throw new Error('no hemos logrado conseguir la informacion del usuario de oauth0');
+        }
+
+        console.log(`user sub : ${userAuth0.sub}`);
+        console.log(`user name : ${userAuth0.name}`);
+        console.log(`user email : ${userAuth0.email}`);
+
+        if(!userAuth0.email){
+            throw new Error("Usuario OAuth0 no tiene email");
+        }
+
+        let user=await this._repo.getUserByEmail(userAuth0.email);
         if(!user){
             const newUser=new UserEntity()
-            newUser.nombre=payload.nombre;
-            newUser.correo=payload.email;
+            newUser.nombre=userAuth0.name;
+            newUser.correo=userAuth0.email;
             newUser.contrasena='';
             newUser.proveedorAuth='oauth0';
-            newUser.oauth0Id=payload.oauth0Id;
+            newUser.oauth0Id=userAuth0.sub;
             newUser.edad=25,
-            newUser.rol='admin',
+            newUser.rol='usuario',
             newUser.fechaRegistro=new Date()
 
             user=await this._repo.createUser(newUser);
             console.log(`user created ${newUser}`);
         }
 
-        const token=await this._token.generateToken(user);
+
+        if(user.oauth0Id && userAuth0.sub!==user.oauth0Id){
+            throw new Error("no coincide el id del sub de oauth0 con el guardado en la bd");
+        }
+
+        const token=this._token.generateToken(user);
         console.log(`token generated ${token}`);
 
         return {
@@ -124,6 +149,35 @@ export class UserService implements IUserService{
             rol:user.rol
         };
 
+    }
+
+    //METHOD TO GET THE USER INFO AUTH0
+    private async getUserInfoAuth0(accessToken:string) : Promise<Auth0UserInfoDTO> {
+        try{
+            const response=await axios.get<Auth0UserInfoDTO>(`${process.env.OAUTH_DOMAIN}userinfo`,{
+                headers:{
+                    /* Authorization: `Bearer ${accessToken}` */
+                    Authorization: `Bearer ${this.normalizeToken(accessToken)}`
+                }    
+            });
+
+            console.log(`user info obtain ${response.data}`);
+            return response.data;
+
+        }catch(error:any){
+            console.error(
+                'Error obteniendo userinfo Auth0',
+                error.response?.data || error.message
+            );
+            throw new Error('No se pudo obtener información del usuario Auth0');
+        }
+    }
+
+    //METHOD TO NORMALICE THE TOKEN DELETE THE WORD BEARER
+    private normalizeToken(token: string): string {
+        return token.startsWith('Bearer ')
+            ? token.replace(/^Bearer\s+/i, '')
+            : token;
     }
     
 }
