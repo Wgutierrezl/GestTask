@@ -178,6 +178,58 @@ router.put('/updateTask/:id/boardId/:tableroId',
             requireBoardRole(['owner','miembro']),
             taskController.updateTask);
 
+
+/**
+ * @swagger
+ * /tasks/updateStageTaskId/{taskId}/boardId/{tableroId}:
+ *   put:
+ *     summary: Actualizar la etapa de una tarea
+ *     tags: [Task]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la tarea a actualizar
+ *       - in: path
+ *         name: tableroId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero al que pertenece la tarea
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               stageId:
+ *                 type: string
+ *                 example: "fer54fs54s5df45d434"
+ *     responses:
+ *       200:
+ *         description: Tarea actualizada exitosamente
+ *       400:
+ *         description: Datos inválidos
+ *       401:
+ *         description: No autorizado
+ *       403:
+ *         description: Acceso denegado
+ *       404:
+ *         description: Tarea no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/updateStageTaskId/:taskId/boardId/:tableroId',
+            authMiddleware(['admin','usuario']),
+            requireBoardRole(['owner','miembro']),
+            taskController.updateStageTask);
+
+
 /**
  * @swagger
  * /tasks/getAllTaskByPipeId/{pipelineId}:

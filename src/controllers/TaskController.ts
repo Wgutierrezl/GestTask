@@ -8,6 +8,7 @@ import { AuthRequest } from "../middleware/genericMiddleware";
 import { CommentsRepository } from "../repositories/CommentsRepository";
 import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
+import { StageDTO } from "../models/DTOs/StageDTO";
 
 export class TaskController{
 
@@ -66,6 +67,26 @@ export class TaskController{
         }
     }
 
+    updateStageTask=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const {taskId}=req.params;
+            if(!taskId){
+                return res.status(400).json({message:'debes de digitar el id de la tarea'});
+            }
+            const dto:StageDTO=req.body;
+
+            const response=await this._service.updateStageByTaskId(taskId, dto);
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado actualizar la etapa de la tarea'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error.Response}`})
+        }
+    }
+
 
     getTaskByPipelineId=async(req:Request, res:Response) : Promise<Response> => {
         try{
@@ -87,6 +108,7 @@ export class TaskController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
+
 
     getTaskByUser_Pipeline_Board=async(req: Request, res:Response) : Promise<Response> => {
         try{
@@ -117,6 +139,7 @@ export class TaskController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
+
 
     getTaskById=async(req: Request, res:Response) : Promise<Response> => {
         try{
@@ -161,6 +184,7 @@ export class TaskController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
+
 
     deleteTaskByPipelineId=async(req:AuthRequest, res:Response) : Promise<Response> => {
         try{

@@ -1,3 +1,4 @@
+import { StageDTO } from "../../models/DTOs/StageDTO";
 import { TaskDTO } from "../../models/DTOs/TaskDTO";
 import { TaskUpdateDTO } from "../../models/DTOs/TaskUpdateDTO";
 import { TaskEntity } from "../../models/entities/TaskEntity";
@@ -8,6 +9,7 @@ export interface ITaskService{
     getAllTaskByUser_Pipe_Board_Id(userId:string, pipelineId:string, boardId:string) : Promise<TaskEntity[] | null>;
     getTaskById(id:string) : Promise<TaskEntity | null>;
     updateTask(id:string, data:TaskDTO) : Promise<TaskUpdateDTO | null>;
+    updateStageByTaskId(taskId:string, stage:StageDTO) : Promise<TaskUpdateDTO | null>;
     deleteTask(id:string) : Promise<any | null>;
     deleteTasksByPipelineId(pipelineId:string) : Promise<any | null>;
 }

@@ -1,6 +1,7 @@
 import { ICommentsService } from "../interfaces/IComments/ICommentsService";
 import { ITaskRepository } from "../interfaces/iTask/ITaskRepository";
 import { ITaskService } from "../interfaces/iTask/ITaskService";
+import { StageDTO } from "../models/DTOs/StageDTO";
 import { TaskDTO } from "../models/DTOs/TaskDTO";
 import { TaskUpdateDTO } from "../models/DTOs/TaskUpdateDTO";
 import { TaskEntity } from "../models/entities/TaskEntity";
@@ -14,6 +15,27 @@ export class TaskService implements ITaskService{
         this._repo=repo;
         this._commentsService=commentsService;
 
+    }
+
+    //METHOD TO UPDATE STAGE BY TASK ID
+    async updateStageByTaskId(taskId: string, stage:StageDTO): Promise<TaskUpdateDTO | null> {
+        let task=await this._repo.getTaskById(taskId);
+        console.log(`tarea encontrada ${task}`);
+        if(!task){
+            return null;
+        }
+
+        if(task.etapaId==stage.stageId){
+            throw new Error("no puedes cambiar la etapa de la tarea en la que ya se encuentra");
+        }
+
+        task.etapaId=stage.stageId;
+
+        const taskUpdated=await this._repo.updateTask(task);
+        console.log(`tarea actualizada ${taskUpdated}`);
+
+        return this.fillObjectTaskInfo(taskUpdated);
+        
     }
 
     //METHOD TO DELETE TASKS BY PIPELINE ID
