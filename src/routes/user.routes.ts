@@ -127,7 +127,7 @@ router.get('/getUserById/:id',authMiddleware(['admin','usuario']),userController
  *       500:
  *         description: Error al obtener usuarios
  */
-router.get('/getAllUsers',authMiddleware(['admin']),userController.getAllUsers);
+router.get('/getAllUsers',authMiddleware(['admin','usuario']),userController.getAllUsers);
 
 
 /**

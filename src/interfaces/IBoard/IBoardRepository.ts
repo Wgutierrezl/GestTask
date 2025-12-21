@@ -5,6 +5,10 @@ import { BoardEntity } from "../../models/entities/BoardsEntity";
 export interface IBoardRepository{
     createBoard(data:BoardEntity) : Promise<any>;
     getBoardsByOnwerId(userId: string) : Promise<any[]>;
+
+    //METHOD TO GET ALL THE BOARDS THAT THE USER BELONGS
+    getBoardsByUserId(userId:string) : Promise<any[]>;
+    
     /* getBoardsByPipelineId(pipelineId: string) : Promise<any[]>; */
     getBoardById(id:string) : Promise<any | null>;
     updateBoards(data:BoardUpdateDTO) : Promise<any>;

@@ -87,7 +87,8 @@ export class BoardService implements IBoardService{
 
 
     async getAllBoardByOnwnerId(userId: string): Promise<BoardInfoDTO[] | null> {
-        const boards=await this._repo.getBoardsByOnwerId(userId);
+        /* const boards=await this._repo.getBoardsByOnwerId(userId); */
+        const boards=await this._repo.getBoardsByUserId(userId);
         console.log(boards);
         if(!boards || boards.length==0){
             return null;
