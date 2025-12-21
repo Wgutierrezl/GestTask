@@ -5,6 +5,13 @@ import { TableroUsuario } from "../models/entities/BoardsUsers";
 import { BUsersEntity } from "../models/entities/BUsersEntity";
 
 export class BUsersRepository implements IBUsersRepository{
+
+    //METHOD TO DELETE ALL THE MEMBERS BY BOARDID
+    async deleteMembersBoardByBoardId(boardId: string): Promise<any> {
+        const result=await TableroUsuario.deleteMany({tableroId:boardId});
+        console.log(`cantidad de registros eliminados ${result.deletedCount}`);
+        return result.deletedCount>0;
+    }
     
     //METHOD TO GET BOARD_MEMBER BY USERID AND BOARD_ID
     async getBoardMemberByUserAndBoardId(userId: string, boardId: string): Promise<any> {

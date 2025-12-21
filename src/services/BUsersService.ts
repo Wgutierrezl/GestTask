@@ -13,6 +13,23 @@ export class BUsersService implements IBUsersService{
 
     }
 
+    //METHOD TO DELETE MEMBERS BY BOARDID
+    async deleteMembersByBoardId(boardId: string): Promise<any | null> {
+        const members=await this._repo.getBoardMemberByBoardId(boardId);
+        if(!members || members.length===0){
+            return null;
+        }
+
+        const membersDeleted=await this._repo.deleteMembersBoardByBoardId(boardId);
+
+        if(!membersDeleted){
+            return false;
+        }
+
+        return membersDeleted;
+
+    }
+
     //METHOD TO GET BOARD_MEMBER BY USER ID AND BOARD ID
     async getBoardMemberByUserAndBoardId(userId: string, boardId: string): Promise<any> {
         const member=await this._repo.getBoardMemberByUserAndBoardId(userId, boardId);

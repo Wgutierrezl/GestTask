@@ -171,4 +171,25 @@ export class BoardMemberController{
     }
 
 
+    //ENDPOINT TO DELETE MEMBERS BY BOARDID
+    deleteMemberByBoardId=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const {boardId}=req.params;
+            if(!boardId){
+                return res.status(400).json({message:'debes de digitar el id del tablero'});
+            }
+
+            const membersDeleted=await this._service.deleteMembersByBoardId(boardId);
+            if(!membersDeleted){
+                return res.status(400).json({message:`no hemos logrado eliminar los miembros del tablero ${boardId}`,success:membersDeleted});
+            }
+
+            return res.status(200).json({message:'miembros eliminados correctamente',success:membersDeleted});
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error.response ?? error.message}`});
+        }
+    }
+
+
 }

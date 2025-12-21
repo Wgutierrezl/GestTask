@@ -41,6 +41,19 @@ export class BoardService implements IBoardService{
             }
         }
 
+        console.log("desde aqui empezamos a preguntar por los miembros del tablero");
+        //then, we ask for the board members that the board has
+        const boardMember=await this._boardMember.getBoardMemberByBoardId(id);
+        console.log(`miembros del tablero encontrados ${boardMember}`);
+        if(boardMember && boardMember.length>0){
+            const membersDeleted=await this._boardMember.deleteMembersByBoardId(id);
+            if(!membersDeleted){
+                console.log('no hemos logrado eliminar los miembros del tablero');
+            }
+
+            console.log('miembros del tablero eliminados correctamente');
+        }
+
         //finally, we delete the board
         const boardDeleted=await this._repo.deleteBoardById(id);
         if(!boardDeleted){

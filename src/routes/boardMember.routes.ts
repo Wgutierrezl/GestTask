@@ -191,7 +191,9 @@ router.get('/getAllMemberByBoardId/:boardId',bm_Controller.getAllMembersByBoardI
  *       500:
  *         description: Error al obtener los tableros del usuario
  */
-router.get('/getMemberByBoardIdAndUser/:boardId', authMiddleware(['admin','usuario']), bm_Controller.getMemberByBoardId);
+router.get('/getMemberByBoardIdAndUser/:boardId', 
+            authMiddleware(['admin','usuario']), 
+            bm_Controller.getMemberByBoardId);
 
 
 /**
@@ -257,6 +259,35 @@ router.delete('/deleteBoardMemberById/:id/boardId/:tableroId',
             authMiddleware(['admin','usuario']),
             requireBoardRole(['owner']),
             bm_Controller.deleteBoardMemberById);
+
+/**
+ * @swagger
+ * /boardMembers/deleteMemberByBoardId/{boardId}:
+ *   delete:
+ *     summary: Eliminar miembros del tablero por tableroId
+ *     tags: [Board_Members]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: boardId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del tablero
+ *     responses:
+ *       200:
+ *         description: Miembros del tablero eliminados correctamente
+ *       404:
+ *         description: Miembros o tablero no encontrado
+ *       403:
+ *         description: Rol no autorizado
+ *       500:
+ *         description: Error al eliminar los miembros del tablero
+ */
+router.delete('/deleteMemberByBoardId/:boardId',
+                authMiddleware(['admin','usuario']),
+                bm_Controller.deleteMemberByBoardId);
 
 
 export default router;
