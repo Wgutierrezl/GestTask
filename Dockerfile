@@ -32,7 +32,7 @@ COPY --from=builder /usr/src/app/dist ./dist
 
 USER appuser
 
-EXPOSE 8097
+EXPOSE 8098
 
 CMD ["node", "dist/main.js"]
 
