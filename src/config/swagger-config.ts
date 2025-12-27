@@ -13,7 +13,7 @@ export const swaggerSetUp=(app:Application)=>{
       },
       servers: [
         {
-          url: /* process.env.URL_SWAGGER || "http://localhost:3000" */ "" ,
+          url: process.env.URL_SWAGGER || "http://localhost:3000",
         },
       ],
       components: {
