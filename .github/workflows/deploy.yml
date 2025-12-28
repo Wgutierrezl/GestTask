@@ -1,0 +1,88 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches:
+      - GT_Oauth0_Dev
+      - GT_Oauth0_Prod
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  CLUSTER_NAME: cluster-gt-stack-v2
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧩 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: 🔑 Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: ⚙️ Set environment based on branch
+        id: set-env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/GT_Oauth0_Dev" ]]; then
+            echo "ECR_REPOSITORY=${{ secrets.ECR_REPOSITORY_DEV }}" >> $GITHUB_ENV
+            echo "SERVICE_NAME=service-gt-dev" >> $GITHUB_ENV
+            echo "TASK_FAMILY=tasg-gt-dev" >> $GITHUB_ENV
+            echo "IMAGE_NAME=gesttask_dev" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/GT_Oauth0_Prod" ]]; then
+            echo "ECR_REPOSITORY=${{ secrets.ECR_REPOSITORY_PROD }}" >> $GITHUB_ENV
+            echo "SERVICE_NAME=task-gt-prod" >> $GITHUB_ENV
+            echo "TASK_FAMILY=tasg-gt-prod" >> $GITHUB_ENV
+            echo "IMAGE_NAME=gesttask_prod" >> $GITHUB_ENV
+          fi
+
+      - name: 🏗️ Build, tag, and push Docker image to ECR
+        run: |
+          IMAGE_TAG=latest
+          docker build -t $IMAGE_NAME .
+          docker tag $IMAGE_NAME:latest $ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REPOSITORY:$IMAGE_TAG
+          echo "IMAGE_URI=$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: 🧾 Render new task definition with updated image
+        id: render-task-def
+        run: |
+          TASK_DEF_FILE=taskdef.json
+          aws ecs describe-task-definition \
+            --task-definition $TASK_FAMILY \
+            --query taskDefinition > $TASK_DEF_FILE
+
+          # Quitar los campos no válidos antes de registrar
+          jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' $TASK_DEF_FILE > cleaned-task-def.json
+
+          # Actualizar la imagen en el container
+          jq --arg IMAGE "$IMAGE_URI" '.containerDefinitions[0].image = $IMAGE' cleaned-task-def.json > new-task-def.json
+
+          echo "TASK_DEF_FILE=new-task-def.json" >> $GITHUB_ENV
+
+      - name: 🆕 Register new task definition revision
+        id: register-task-def
+        run: |
+          NEW_REVISION_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://new-task-def.json \
+            --query "taskDefinition.taskDefinitionArn" \
+            --output text)
+          echo "NEW_REVISION_ARN=$NEW_REVISION_ARN" >> $GITHUB_ENV
+
+      - name: 🚀 Update ECS service with new task definition
+        run: |
+          aws ecs update-service \
+            --cluster $CLUSTER_NAME \
+            --service $SERVICE_NAME \
+            --task-definition $NEW_REVISION_ARN \
+            --force-new-deployment
+
+          echo "✅ Despliegue exitoso en $SERVICE_NAME con imagen $IMAGE_URI"

@@ -112,6 +112,7 @@ export class UserService implements IUserService{
     async login(loginDTO: LoginDTO): Promise<SessionDTO | null> {
         const user=await this._repo.getUserByEmail(loginDTO.email);
         console.log("User found",user);
+        console.log("Log the user correctly by the endpoint log");
         if(user==null){
             return null;
         }
