@@ -52,7 +52,7 @@ async function start() {
 
 		app.use('/comments',CommentRouter); */
 
-		app.use('/api',router);
+		app.use('/dev/api',router);
 
 		// Health check (útil para comprobar que el servidor responde)
 		app.get('/health', (_req, res) => {
