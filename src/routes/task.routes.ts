@@ -132,6 +132,9 @@ router.post('/createTask/boardId/:tableroId',
  *               priodidad:
  *                 type: string
  *                 example: "media"
+ *               estado:
+ *                 type: string
+ *                 example: "Activo"
  *               fechaLimite:
  *                 type: string
  *                 format: date-time

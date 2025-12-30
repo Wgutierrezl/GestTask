@@ -15,6 +15,7 @@ export class TaskUpdate{
     titulo?:string
     descripcion?: string
     asignadoA?: string
+    estado?: string
     priodidad?: string
     fechaLimite?: Date
     fechaFinalizacion?: Date;

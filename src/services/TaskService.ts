@@ -34,6 +34,10 @@ export class TaskService implements ITaskService{
             task.priodidad=data.priodidad;
         }
 
+        if(data.estado){
+            task.estado=data.estado;
+        }
+
         if(data.fechaLimite){
             task.fechaLimite=data.fechaLimite;
         }
