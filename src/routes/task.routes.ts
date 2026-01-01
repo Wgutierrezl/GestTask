@@ -126,18 +126,15 @@ router.post('/createTask/boardId/:tableroId',
  *               descripcion:
  *                 type: string
  *                 example: "Revisar y actualizar el informe del cliente"
- *               pipelineId:
- *                 type: string
- *                 example: "pip123"
- *               etapaId:
- *                 type: string
- *                 example: "etp002"
  *               asignadoA:
  *                 type: string
  *                 example: "user789"
  *               priodidad:
  *                 type: string
  *                 example: "media"
+ *               estado:
+ *                 type: string
+ *                 example: "Activo"
  *               fechaLimite:
  *                 type: string
  *                 format: date-time
@@ -147,18 +144,12 @@ router.post('/createTask/boardId/:tableroId',
  *                 nullable: true
  *                 format: date-time
  *                 example: "2025-02-05T12:30:00.000Z"
- *               tableroId:
- *                 type: string
- *                 example: "board123"
  *             required:
  *               - titulo
  *               - descripcion
- *               - pipelineId
- *               - etapaId
  *               - asignadoA
  *               - priodidad
  *               - fechaLimite
- *               - tableroId
  *     responses:
  *       200:
  *         description: Tarea actualizada exitosamente

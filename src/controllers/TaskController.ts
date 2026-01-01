@@ -9,6 +9,7 @@ import { CommentsRepository } from "../repositories/CommentsRepository";
 import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
 import { StageDTO } from "../models/DTOs/StageDTO";
+import { TaskUpdate } from "../models/DTOs/TaskUpdateDTO";
 
 export class TaskController{
 
@@ -44,7 +45,7 @@ export class TaskController{
     updateTask=async(req:Request, res:Response) : Promise<Response> => {
         try{
             const {id}=req.params;
-            const dto:TaskDTO=req.body;
+            const dto:TaskUpdate=req.body;
 
             if(!id){
                 return res.status(400).json({message:'debes de diligenciar el id'});
@@ -54,7 +55,7 @@ export class TaskController{
                 return res.status(400).json({message:'debes de diligenciar el objeto'});
             }
 
-            const response=await this._service.updateTask(id,dto);
+            const response=await this._service.updateTaskById(id,dto);
             if(response==null){
                 return res.status(400).json({message:'no hemos logrado actualizar la informacion de la task'});
             }

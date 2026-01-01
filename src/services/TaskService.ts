@@ -3,7 +3,7 @@ import { ITaskRepository } from "../interfaces/iTask/ITaskRepository";
 import { ITaskService } from "../interfaces/iTask/ITaskService";
 import { StageDTO } from "../models/DTOs/StageDTO";
 import { TaskDTO } from "../models/DTOs/TaskDTO";
-import { TaskUpdateDTO } from "../models/DTOs/TaskUpdateDTO";
+import { TaskInfoDTO, TaskUpdate, TaskUpdateDTO } from "../models/DTOs/TaskUpdateDTO";
 import { TaskEntity } from "../models/entities/TaskEntity";
 
 export class TaskService implements ITaskService{
@@ -14,6 +14,54 @@ export class TaskService implements ITaskService{
     constructor(repo:ITaskRepository, commentsService:ICommentsService){
         this._repo=repo;
         this._commentsService=commentsService;
+
+    }
+
+    //Method to Update a Task
+    async updateTaskById(id: string, data: TaskUpdate): Promise<TaskInfoDTO | null> {
+        const task=await this._repo.getTaskById(id);
+        console.log(`tarea encontrado ${task}`);
+
+        if(!task){
+            return null;
+        }
+
+        if(data.titulo){
+            task.titulo=data.titulo
+        };
+
+        if(data.priodidad){
+            task.priodidad=data.priodidad;
+        }
+
+        if(data.estado){
+            task.estado=data.estado;
+        }
+
+        if(data.fechaLimite){
+            task.fechaLimite=data.fechaLimite;
+        }
+
+        if(data.fechaFinalizacion){
+            task.fechaFinalizacion=data.fechaFinalizacion;
+        }
+
+        if(data.descripcion){
+            task.descripcion=data.descripcion;
+        }
+
+        if(data.asignadoA){
+            task.asignadoA=data.asignadoA;
+        }
+
+        const taskUpdated=await this._repo.updateTask(task);
+        console.log(`tarea actualizada correctamente ${taskUpdated}`);
+
+        if(!taskUpdated){
+            throw new Error('no hemos logrado actualizar la tarea');
+        }
+
+        return taskUpdated;
 
     }
 
