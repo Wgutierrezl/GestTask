@@ -11,4 +11,5 @@ export interface ITaskRepository{
     deleteTasksByPipelineId(pipelineId:string) : Promise<any>;
 
     getTotalTask() : Promise<number>;
+    getTotalTaskByUserId(userId:string) : Promise<number>;
 }

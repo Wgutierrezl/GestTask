@@ -11,4 +11,5 @@ export interface IPipelinesRepository{
     deletePipelinesById(id:string) : Promise<any>;
 
     getTotalPipelines() : Promise<number>;
+    getTotalPipelinesByBoardsId(boardsId:string[]) : Promise<number>;
 }

@@ -53,5 +53,58 @@ router.get('/getDashboardSummary',
             authMiddleware(['admin']),
             dashController.getDashboardSummary);
 
+   
+/**
+ * @swagger
+ * /dashboard/getUserDashboardSummary/{userId}:
+ *   get:
+ *     summary: Obtener resumen del dashboard de un usuario
+ *     description: Devuelve estadísticas globales de uso de la aplicación para un usuario específico.
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario a consultar
+ *     responses:
+ *       200:
+ *         description: Resumen del dashboard del usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalBoards:
+ *                   type: integer
+ *                   example: 5
+ *                 totalPipelines:
+ *                   type: integer
+ *                   example: 12
+ *                 totalTask:
+ *                   type: integer
+ *                   example: 87
+ *                 totalComments:
+ *                   type: integer
+ *                   example: 230
+ *       400:
+ *         description: Parámetro userId inválido
+ *       401:
+ *         description: No autenticado
+ *       403:
+ *         description: No autorizado (solo administradores)
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */            
+router.get('/getUserDashboardSummary/:userId',
+            authMiddleware(['admin']),
+            dashController.getUserDashboardSummary
+)
+
 
 export default router;

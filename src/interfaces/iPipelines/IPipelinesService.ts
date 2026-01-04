@@ -10,4 +10,5 @@ export interface IPipelinesService{
     deletePipelinesById(id:string) : Promise<any>;
 
     getTotalPipelinesCount() : Promise<number>;
+    getTotalPipelinesByBoardsId(boardsId:string[]) : Promise<number>;
 }

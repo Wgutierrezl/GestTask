@@ -74,4 +74,24 @@ export class DashboardController{
 
         }
     }
+
+
+    getUserDashboardSummary=async(req:AuthRequest, res:Response) => {
+        try{
+            const {userId}=req.params
+            if(!userId){
+                return res.status(400).json({message:'debes de digitar el id del usuario'});
+            }
+
+            const response=await this._dashboardService.getDashboardUserSummary(userId);
+            if(!response){
+                return res.status(400).json({message:'el usuario aun no tiene registro de actividades dentro del aplicativo'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error.message}`});
+        }
+    }
 }

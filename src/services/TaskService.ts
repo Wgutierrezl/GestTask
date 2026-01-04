@@ -17,6 +17,18 @@ export class TaskService implements ITaskService{
 
     }
 
+    //FOR COMMENT
+    async getTotalTaskByUserId(userId: string): Promise<number> {
+        const response=await this._repo.getTotalTaskByUserId(userId);
+        console.log(`total de tareas que el usuario tiene asignadas ${response}`);
+
+        if(!response){
+            throw new Error("no hemos lograco acceder a las tareas que este tiene asignadas");
+        }
+
+        return response;
+    }
+
     async getTotalTtasksCount(): Promise<number> {
         const data=await this._repo.getTotalTask();
         if(!data){

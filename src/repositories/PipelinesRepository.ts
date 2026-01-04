@@ -6,6 +6,16 @@ import { Pipeline } from "../models/entities/Pipelines";
 import { PipelinesEntity } from "../models/entities/PipelinesEntity";
 
 export class PipelinesRepository implements IPipelinesRepository{
+
+    //METHOD TO GET COUNT BY ALL THE PIPELINES BY BOARDS ID ARRAY
+    async getTotalPipelinesByBoardsId(boardsId: string[]): Promise<number> {
+        return await Pipeline.countDocuments({
+            tableroId:{
+                $in: boardsId.map(id => new mongoose.Types.ObjectId(id))
+            }
+        });
+        
+    }
     
     //METHOD TO GET THE COUNT BY ALL THE PIPELINES CREATED
     async getTotalPipelines(): Promise<number> {

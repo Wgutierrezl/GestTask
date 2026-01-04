@@ -4,7 +4,7 @@ import { IDashboardService } from "../interfaces/IDashboard/IDashboardService";
 import { IPipelinesService } from "../interfaces/iPipelines/IPipelinesService";
 import { ITaskService } from "../interfaces/iTask/ITaskService";
 import { IUserService } from "../interfaces/iUser/IUserService";
-import { DashboardDTO } from "../models/DTOs/DashboardDTO";
+import { DashboardDTO, DashboardUserDTO } from "../models/DTOs/DashboardDTO";
 
 export class DashboardService implements IDashboardService{
 
@@ -26,6 +26,36 @@ export class DashboardService implements IDashboardService{
         this._pipelinesService=pipelinesService;
         this._taskService=taskService;
         this._commentService=commentService;
+    }
+
+    async getDashboardUserSummary(userId: string): Promise<DashboardUserDTO | null> {
+        try{
+            const boardRes=await this._boardService.getAllBoardByOnwnerId(userId);
+            if(!boardRes || boardRes.length===0){
+                return null;
+            }
+
+            const boardsId=boardRes.map(p=> p._id);
+
+            const [pipelineRes, taskRes, commentRes]= await Promise.all([
+                this._pipelinesService.getTotalPipelinesByBoardsId(boardsId),
+                this._taskService.getTotalTaskByUserId(userId),
+                this._commentService.getTotalCommentsByUserId(userId)
+            ]);
+
+            const userDashboard=new DashboardUserDTO();
+
+            userDashboard.totalBoards=boardRes.length ?? 0;
+            userDashboard.totalPipelines=pipelineRes ?? 0;
+            userDashboard.totalTask=taskRes ?? 0;
+            userDashboard.totalComments=commentRes ?? 0;
+
+            return userDashboard;
+
+        }catch(error:any){
+            console.log(`ha currido un error inesperado ${error.message}`);
+            throw error;
+        }
     }
 
     async getDashboardSummary(): Promise<DashboardDTO> {

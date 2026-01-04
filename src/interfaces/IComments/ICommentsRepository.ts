@@ -14,4 +14,5 @@ export interface ICommentsRepository{
     getCommentsByTaskId(tasksId:string[]) : Promise<any[]>;
 
     getTotalComments() : Promise<number>;
+    getTotalCommentsByUserId(userId:string) : Promise<number>
 }

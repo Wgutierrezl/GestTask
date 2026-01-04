@@ -6,6 +6,13 @@ import { TaskEntity } from "../models/entities/TaskEntity";
 
 export class TaskRepository implements ITaskRepository{
     
+    //METHOD TO GET QUANTITY BY USER ID
+    async getTotalTaskByUserId(userId: string): Promise<number> {
+        return await Tarea.countDocuments({
+            asignadoA:userId
+        });
+    }
+    
     //METHOD TO GET COUNT BY ALL THE TASK
     async getTotalTask(): Promise<number> {
         return await Tarea.countDocuments();

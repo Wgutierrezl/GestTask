@@ -17,4 +17,5 @@ export interface ICommentsService{
     getCommentsByTaskId(tasksId:string[]) : Promise<any[]>;
 
     getTotalCommentsCount() : Promise<number>;
+    getTotalCommentsByUserId(userId:string) : Promise<number>
 }

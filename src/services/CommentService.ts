@@ -19,6 +19,18 @@ export class CommentService implements ICommentsService{
         this._b2=b2;
     }
 
+    //FOR COMMENT
+    async getTotalCommentsByUserId(userId: string): Promise<number> {
+        const response=await this._repo.getTotalCommentsByUserId(userId);
+        console.log(`cantidad de comentarios hecho por el usuario ${response}`);
+
+        if(!response){
+            throw new Error('no hemos logrado acceder a los comentarios');
+        }
+
+        return response;
+    }
+
     //METHOD TO GET ALL COUNT BY COMMENTS
     async getTotalCommentsCount(): Promise<number> {
         const data=await  this._repo.getTotalComments();

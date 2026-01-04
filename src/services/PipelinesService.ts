@@ -14,7 +14,20 @@ export class PipelinesService implements IPipelinesService{
         this._repo=repo;
         this._taskService=taskService;
     }
-    //
+
+    // FOR COMMENT
+    async getTotalPipelinesByBoardsId(boardsId: string[]): Promise<number> {
+        const response=await this._repo.getTotalPipelinesByBoardsId(boardsId);
+        console.log(`numero de pipelies creados en los tableros del usuario ${response}`);
+
+        if(!response){
+            throw new Error("No hemos logrado acceder a la cantidad de pipelines");
+        }
+
+        return response;
+    }
+    
+    // FOR COMMENT
     async getTotalPipelinesCount(): Promise<number> {
         const data=await this._repo.getTotalPipelines();
         if(!data){
