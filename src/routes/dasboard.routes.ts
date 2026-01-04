@@ -146,6 +146,9 @@ router.get('/getUserDashboardSummary/:userId',
  *                   ownerId:
  *                     type: string
  *                     example: "65a9f3c4d8f4a2e9a1b99999"
+ *                   estado:
+ *                     type: string
+ *                     example: "activo"
  *                   totalPipelines:
  *                     type: integer
  *                     example: 4

@@ -21,6 +21,17 @@ export class BoardService implements IBoardService{
         this._pipelineService=pipelineService;
     }
 
+    async getBoardsByOnerId(userId: string): Promise<BoardInfoDTO[] | null> {
+        const response=await this._repo.getBoardsByOnwerId(userId);
+        console.log(`cantidad de tableros encontrados ${response.length}`);
+
+        if(!response || response.length){
+            return null;
+        }
+
+        return response;
+    }
+
     async getTotalBoardsCount(): Promise<number> {
         const data=await this._repo.getTotalBoards();
 

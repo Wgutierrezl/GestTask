@@ -17,6 +17,7 @@ export class DashboardBoardDTO{
     id!:string;
     nombre?:string;
     descripcion?:string;
+    estado?:string;
     ownerId?:string
     totalPipelines?:number;
     totalTask?:number;

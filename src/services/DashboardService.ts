@@ -58,6 +58,7 @@ export class DashboardService implements IDashboardService{
                     nombre:board.nombre,
                     descripcion:board.descripcion,
                     ownerId: board.ownerId,
+                    estado:board.estado ?? '',
                     totalPipelines:pipelines.length ?? 0,
                     totalTask: taskCounts ?? 0,
                     totalMembers: members?.length ?? 0

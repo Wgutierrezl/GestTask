@@ -45,7 +45,14 @@ export class BoardRepository implements IBoardRepository{
             boardMap.set(board._id.toString(), board);
         });
 
-        return Array.from(boardMap.values());
+        // RETURN DTO
+        return Array.from(boardMap.values()).map(board => ({
+            _id: board._id.toString(),
+            nombre: board.nombre,
+            descripcion: board.descripcion,
+            ownerId: board.ownerId.toString(),
+            estado: board.estado
+        }));
 
     }
     
@@ -58,12 +65,22 @@ export class BoardRepository implements IBoardRepository{
         const board=new Board(data);
         return await board.save();
     }
+
     async getBoardsByOnwerId(userId: string): Promise<any[]> {
-        return await Board.find({ownerId:userId});
+        const boards= await Board.find({ownerId:userId});
+        return boards.map(board => ({
+            _id: board._id.toString(),
+            nombre: board.nombre,
+            descripcion: board.descripcion,
+            ownerId: board.ownerId.toString(),
+            estado: board.estado
+        }));
     }
+
     async getBoardById(id: string): Promise<any | null> {
         return await Board.findById(id);
     }
+
     async updateBoards(data: BoardUpdateDTO): Promise<any> {
         return await Board.findByIdAndUpdate(data._id, data, {new:true});
     }
