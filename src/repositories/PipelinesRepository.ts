@@ -7,6 +7,15 @@ import { PipelinesEntity } from "../models/entities/PipelinesEntity";
 
 export class PipelinesRepository implements IPipelinesRepository{
 
+    //METHOD TO SELECT ALL THE PIPELINES ID BY BOARDS ID
+    async getTotalPipelinesIdByBoardsId(boardsId: string[]): Promise<any[]> {
+        return await Pipeline.find({
+            tableroId:{
+                $in: boardsId.map(p=> new mongoose.Types.ObjectId(p))
+            }
+        }).select('_id');
+    }
+
     //METHOD TO GET COUNT BY ALL THE PIPELINES BY BOARDS ID ARRAY
     async getTotalPipelinesByBoardsId(boardsId: string[]): Promise<number> {
         return await Pipeline.countDocuments({

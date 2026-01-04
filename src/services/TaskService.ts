@@ -17,6 +17,19 @@ export class TaskService implements ITaskService{
 
     }
 
+    //FOR COMMENT -- DASHBOARD
+    async getTotalTaskByPipelinesId(pipelinesId: string[]): Promise<number> {
+        const response=await this._repo.getTotalTaskByPipelinesId(pipelinesId);
+        console.log(`cantidad de tareas dentro de cada pipelines ${response}`);
+
+
+        if(!response){
+            throw new Error("no hemos logrado acceder a la cantidad de tareas por pipelines");
+        }
+
+        return response;
+    }
+
     //FOR COMMENT
     async getTotalTaskByUserId(userId: string): Promise<number> {
         const response=await this._repo.getTotalTaskByUserId(userId);

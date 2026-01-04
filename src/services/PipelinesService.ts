@@ -15,6 +15,17 @@ export class PipelinesService implements IPipelinesService{
         this._taskService=taskService;
     }
 
+    //FOR COMMENTS
+    async getTotalPipelinesIdByBoardsId(boardsId: string[]): Promise<any[]> {
+        const response=await this._repo.getTotalPipelinesIdByBoardsId(boardsId);
+        console.log(`pipelinesId encontrados : ${response.length}`);
+        if(!response || response.length===0){
+            return []
+        }
+
+        return response;
+    }
+
     // FOR COMMENT
     async getTotalPipelinesByBoardsId(boardsId: string[]): Promise<number> {
         const response=await this._repo.getTotalPipelinesByBoardsId(boardsId);

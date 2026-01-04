@@ -14,6 +14,8 @@ export interface ITaskService{
     deleteTask(id:string) : Promise<any | null>;
     deleteTasksByPipelineId(pipelineId:string) : Promise<any | null>;
 
+    //METHODS TO THE DASHBOARD
     getTotalTtasksCount() : Promise<number>;
     getTotalTaskByUserId(userId:string) : Promise<number>;
+    getTotalTaskByPipelinesId(pipelinesId:string[]) : Promise<number>;
 }

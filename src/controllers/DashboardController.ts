@@ -48,12 +48,17 @@ export class DashboardController{
         const boardMember=new BUsersService(_repoMember)
         const boardService=new BoardService(repoBoard,boardMember,pipelineService);
 
+        //DEPENDECIES FOR THE BOARD MEMBER
+        const boardMemberRepo=new BUsersRepository();
+        const boardMemberService=new BUsersService(boardMemberRepo);
+
 
         const dashboard=new DashboardService(userService,
                                              boardService,
                                              pipelineService,
                                              taskService,
-                                             commentService
+                                             commentService,
+                                             boardMemberService
         );
 
         this._dashboardService=dashboard;
@@ -86,6 +91,26 @@ export class DashboardController{
             const response=await this._dashboardService.getDashboardUserSummary(userId);
             if(!response){
                 return res.status(400).json({message:'el usuario aun no tiene registro de actividades dentro del aplicativo'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            return res.status(500).json({message:`ha ocurrido un error inesperado ${error.message}`});
+        }
+    }
+
+    
+    getUserBoardDashboardSummary=async(req:AuthRequest, res:Response) => {
+        try{
+            const {userId}=req.params;
+            if(!userId){
+                return res.status(400).json({message:'debes de digitar el id del usuario'});
+            }
+
+            const response=await this._dashboardService.getDashboardUserBoardsSummary_V2(userId);
+            if(!response || response.length===0){
+                return res.status(400).json({message:'el usuario aun no ha creado nada'});
             }
 
             return res.status(200).json(response);

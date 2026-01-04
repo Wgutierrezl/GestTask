@@ -12,3 +12,13 @@ export class DashboardUserDTO{
     totalTask?:number;
     totalComments?:number;
 }
+
+export class DashboardBoardDTO{
+    id!:string;
+    nombre?:string;
+    descripcion?:string;
+    ownerId?:string
+    totalPipelines?:number;
+    totalTask?:number;
+    totalMembers?:number;
+}

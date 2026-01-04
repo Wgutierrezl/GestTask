@@ -1,10 +1,11 @@
 import { IBoardService } from "../interfaces/IBoard/IBoardService";
+import { IBUsersService } from "../interfaces/IBUsers/IBUsersService";
 import { ICommentsService } from "../interfaces/IComments/ICommentsService";
 import { IDashboardService } from "../interfaces/IDashboard/IDashboardService";
 import { IPipelinesService } from "../interfaces/iPipelines/IPipelinesService";
 import { ITaskService } from "../interfaces/iTask/ITaskService";
 import { IUserService } from "../interfaces/iUser/IUserService";
-import { DashboardDTO, DashboardUserDTO } from "../models/DTOs/DashboardDTO";
+import { DashboardBoardDTO, DashboardDTO, DashboardUserDTO } from "../models/DTOs/DashboardDTO";
 
 export class DashboardService implements IDashboardService{
 
@@ -13,12 +14,14 @@ export class DashboardService implements IDashboardService{
     private readonly _pipelinesService: IPipelinesService;
     private readonly _taskService: ITaskService;
     private readonly _commentService : ICommentsService;
+    private readonly _boardMember: IBUsersService;
 
     constructor(userService : IUserService,
                 boardService: IBoardService,
                 pipelinesService: IPipelinesService,
                 taskService : ITaskService,
-                commentService: ICommentsService
+                commentService: ICommentsService,
+                boardMember: IBUsersService
     )
     {
         this._userService=userService;
@@ -26,6 +29,48 @@ export class DashboardService implements IDashboardService{
         this._pipelinesService=pipelinesService;
         this._taskService=taskService;
         this._commentService=commentService;
+        this._boardMember=boardMember;
+    }
+
+
+    async getDashboardUserBoardsSummary_V2(userId: string): Promise<DashboardBoardDTO[] | null> {
+        try{
+            const boards=await this._boardService.getAllBoardByOnwnerId(userId);
+            console.log(`tableros encontrados ${boards}`);
+            if(!boards){
+                return null;
+            }
+
+            const result: DashboardBoardDTO[] = [];
+
+            for(const board of boards){
+                const pipelines=await this._pipelinesService.getTotalPipelinesIdByBoardsId([board._id.toString()]);
+                console.log(`cantidad de pipelines hallados ${pipelines.length}`);
+
+                const taskCounts=await this._taskService.getTotalTaskByPipelinesId(pipelines);
+                console.log(`cantidad de tareas del pipelines ${taskCounts}`);
+
+                const members=await this._boardMember.getBoardMemberByBoardId(board._id);
+                console.log(`cantidad de miembros del tablero hallados ${members?.length}`);
+
+                result.push({
+                    id:board._id,
+                    nombre:board.nombre,
+                    descripcion:board.descripcion,
+                    ownerId: board.ownerId,
+                    totalPipelines:pipelines.length ?? 0,
+                    totalTask: taskCounts ?? 0,
+                    totalMembers: members?.length ?? 0
+                });
+            
+            }
+
+            return result;
+
+        }catch(error:any){
+            console.log(`ha ocurrido un error inesperado ${error.message}`);
+            throw error;
+        }
     }
 
     async getDashboardUserSummary(userId: string): Promise<DashboardUserDTO | null> {

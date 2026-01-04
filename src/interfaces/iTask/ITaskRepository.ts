@@ -9,7 +9,9 @@ export interface ITaskRepository{
     updateTask(data:TaskUpdateDTO) : Promise<any>;
     deleteTask(id:string) : Promise<any>;
     deleteTasksByPipelineId(pipelineId:string) : Promise<any>;
-
+    
+    //METHODS TO THE DASHBOARD
     getTotalTask() : Promise<number>;
     getTotalTaskByUserId(userId:string) : Promise<number>;
+    getTotalTaskByPipelinesId(pipelinesId:string[]) : Promise<number>;
 }

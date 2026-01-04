@@ -106,5 +106,68 @@ router.get('/getUserDashboardSummary/:userId',
             dashController.getUserDashboardSummary
 )
 
+/**
+ * @swagger
+ * /dashboard/getUserBoardDashboardSummary/{userId}:
+ *   get:
+ *     summary: Obtener resumen del dashboard de tableros por usuario
+ *     description: >
+ *       Retorna un resumen por cada tablero del usuario,
+ *       incluyendo cantidad de pipelines, tareas y miembros.
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: ID del usuario propietario de los tableros
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Resumen del dashboard por tablero
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "65a9f3c4d8f4a2e9a1b12345"
+ *                   nombre:
+ *                     type: string
+ *                     example: "Tablero de Desarrollo"
+ *                   descripcion:
+ *                     type: string
+ *                     example: "Tablero del equipo backend"
+ *                   ownerId:
+ *                     type: string
+ *                     example: "65a9f3c4d8f4a2e9a1b99999"
+ *                   totalPipelines:
+ *                     type: integer
+ *                     example: 4
+ *                   totalTask:
+ *                     type: integer
+ *                     example: 27
+ *                   totalMembers:
+ *                     type: integer
+ *                     example: 6
+ *       401:
+ *         description: No autorizado
+ *       403:
+ *         description: Acceso denegado (rol no permitido)
+ *       404:
+ *         description: El usuario no tiene tableros
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/getUserBoardDashboardSummary/:userId',
+            authMiddleware(['admin']),
+            dashController.getUserBoardDashboardSummary
+)
+
 
 export default router;

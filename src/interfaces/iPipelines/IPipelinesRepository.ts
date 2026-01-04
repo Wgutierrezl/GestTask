@@ -12,4 +12,5 @@ export interface IPipelinesRepository{
 
     getTotalPipelines() : Promise<number>;
     getTotalPipelinesByBoardsId(boardsId:string[]) : Promise<number>;
+    getTotalPipelinesIdByBoardsId(boardsId:string[]) : Promise<any[]>;
 }
