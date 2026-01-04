@@ -17,6 +17,19 @@ export class TaskService implements ITaskService{
 
     }
 
+    async getTotalTtasksCount(): Promise<number> {
+        const data=await this._repo.getTotalTask();
+        if(!data){
+            throw new Error("No hemos logrado acceder a la cantidad de tareas");
+        }
+
+        if(data===0){
+            return 0;
+        }
+
+        return data;
+    }
+
     //Method to Update a Task
     async updateTaskById(id: string, data: TaskUpdate): Promise<TaskInfoDTO | null> {
         const task=await this._repo.getTaskById(id);

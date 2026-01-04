@@ -5,6 +5,11 @@ import { Tarea } from "../models/entities/Tareas";
 import { TaskEntity } from "../models/entities/TaskEntity";
 
 export class TaskRepository implements ITaskRepository{
+    
+    //METHOD TO GET COUNT BY ALL THE TASK
+    async getTotalTask(): Promise<number> {
+        return await Tarea.countDocuments();
+    }
 
     //METHOD TO DELETE TASKS BY PIPELINE ID
     async deleteTasksByPipelineId(pipelineId: string): Promise<any> {

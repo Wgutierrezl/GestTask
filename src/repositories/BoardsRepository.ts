@@ -7,6 +7,11 @@ import { TableroUsuario } from "../models/entities/BoardsUsers";
 
 export class BoardRepository implements IBoardRepository{
 
+    //METHOD TO GET THE COUNT OF THE BOARDS
+    async getTotalBoards(): Promise<number> {
+        return await Board.countDocuments();
+    }
+
     //METHOD TO GET ALL BOARDS THAT THE USER BELONGS
     async getBoardsByUserId(userId: string): Promise<any[]> {
 

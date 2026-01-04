@@ -19,6 +19,22 @@ export class CommentService implements ICommentsService{
         this._b2=b2;
     }
 
+    //METHOD TO GET ALL COUNT BY COMMENTS
+    async getTotalCommentsCount(): Promise<number> {
+        const data=await  this._repo.getTotalComments();
+        console.log(`total de comentarios obtenidos ${data}`);
+
+        if(!data){
+            throw new Error("no hemos logrado obtener la cantidad de comentarios");
+        }
+
+        if(data===0){
+            return 0;
+        }
+
+        return data;
+    }
+
     //METHOD TO GET COMMENTS BY TASK IDS
     async getCommentsByTaskId(tasksId: string[]): Promise<any[]> {
         const response=await this._repo.getCommentsByTaskId(tasksId);

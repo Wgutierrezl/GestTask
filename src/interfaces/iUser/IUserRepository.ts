@@ -6,4 +6,6 @@ export interface IUserRepository {
     getUserByEmail(correo: string): Promise<any>;
     getUserById(id: string): Promise<any>;
     getAllUsers() : Promise<any>;
+
+    getTotalUsers() : Promise<number>;
 }

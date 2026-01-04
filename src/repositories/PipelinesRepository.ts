@@ -7,6 +7,11 @@ import { PipelinesEntity } from "../models/entities/PipelinesEntity";
 
 export class PipelinesRepository implements IPipelinesRepository{
     
+    //METHOD TO GET THE COUNT BY ALL THE PIPELINES CREATED
+    async getTotalPipelines(): Promise<number> {
+        return await Pipeline.countDocuments();
+    }
+    
     async deletePipelinesById(id: string): Promise<any> {
         const result=await Pipeline.deleteOne({_id:new mongoose.Types.ObjectId(id)});
         return result.deletedCount>0;

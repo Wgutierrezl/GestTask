@@ -7,4 +7,6 @@ export interface IBoardService{
     getBoardById(id:string) : Promise<BoardInfoDTO | null>;
     updateBoard(id:string, data:BoardDTO) : Promise<BoardInfoDTO | null>;
     deleteBoardById(id:string) : Promise<any | null>;
+
+    getTotalBoardsCount() : Promise<number>;
 }

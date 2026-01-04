@@ -8,6 +8,7 @@ import { TaskService } from "../services/TaskService";
 import { CommentsRepository } from "../repositories/CommentsRepository";
 import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
+import { AuthRequest } from "../middleware/genericMiddleware";
 
 export class PipelineController{
 
@@ -80,7 +81,22 @@ export class PipelineController{
             return res.status(500).json({ message: "Aun no hay pipelines" });
         }
     }
-
+    
+    //-- DRAFT
+    getTotalPipelines=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getTotalPipelinesCount();
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las cantidades de pipelines'});
+            }
+        
+            return res.status(200).json(response);
+        
+        }catch(error:any){
+            return res.status(400).json({message:`ha ocurrido un error inesperado ${error.message}`});
+    
+        }
+    }
 
     getPipelineByBoardId=async(req:Request, res:Response): Promise<Response> => {
         try{

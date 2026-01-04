@@ -99,6 +99,22 @@ export class BoardController{
 
     }
 
+    //METHOD TO GET TOTAL BOARDS -- DRAFT
+    getTotalBoards=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getTotalBoardsCount();
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las cantidades de tableros'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            return res.status(400).json({message:`ha ocurrido un error inesperado ${error.message}`});
+
+        }
+    }
+
     updateBoard=async(req:Request, res:Response) : Promise<Response> => {
         try{
             const {id}=req.params;

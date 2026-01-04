@@ -13,4 +13,6 @@ export interface ITaskService{
     updateStageByTaskId(taskId:string, stage:StageDTO) : Promise<TaskUpdateDTO | null>;
     deleteTask(id:string) : Promise<any | null>;
     deleteTasksByPipelineId(pipelineId:string) : Promise<any | null>;
+
+    getTotalTtasksCount() : Promise<number>;
 }

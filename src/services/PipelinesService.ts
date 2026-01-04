@@ -14,6 +14,19 @@ export class PipelinesService implements IPipelinesService{
         this._repo=repo;
         this._taskService=taskService;
     }
+    //
+    async getTotalPipelinesCount(): Promise<number> {
+        const data=await this._repo.getTotalPipelines();
+        if(!data){
+            throw new Error("no hemos logrado acceder a la cantidad de pipelines creados");
+        }
+
+        if(data===0){
+            return 0;
+        }
+
+        return data;
+    }
 
     async deletePipelinesById(id: string): Promise<any> {
         //first, we search for the pipeline
@@ -44,7 +57,6 @@ export class PipelinesService implements IPipelinesService{
 
     }
 
-    
     async updatePipelines(id: string, data: pipelinesDTO): Promise<PipeUpdateDTO | null> {
         let pipe=await this._repo.getPipelinesById(id);
         if(pipe==null){
@@ -68,7 +80,6 @@ export class PipelinesService implements IPipelinesService{
         return this.fillAttributesPipeline(pipelineUpdated);
 
     }
-
 
     async createPipelines(data: pipelinesDTO): Promise<pipelinesDTO | null> {
         const pipeline=new PipelinesEntity();
@@ -98,7 +109,6 @@ export class PipelinesService implements IPipelinesService{
 
         return response;
     }
-
 
     async getAllPipelines(): Promise<pipelinesDTO[] | null> {
         const response=await this._repo.getAllPipelines();

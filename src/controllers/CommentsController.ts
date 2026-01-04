@@ -129,7 +129,6 @@ export class CommentsController{
         }
     }
 
-
     //ENDPOINT TO DOWNLOAD FILE BY COMMENT_ID AND FILE_ID
     downloadFileByCommentId=async(req:Request, res:Response) : Promise<Response> => {
         try{
@@ -154,7 +153,6 @@ export class CommentsController{
         }
     }
 
-
     //ENDPOINT TO DELETE COMMENT AND THEIR FILES BY B2
     deleteComment=async(req:Request, res:Response) : Promise<Response> => {
         try{
@@ -174,7 +172,6 @@ export class CommentsController{
             return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
         }
     }
-
 
     //ENDPOINT TO GET ALL COMMENTS BY TASK ID
     getAllCommentsByTaskId=async(req: Request, res:Response) : Promise<Response> =>{
@@ -216,6 +213,21 @@ export class CommentsController{
         }
     }
 
+    //METHOD TO GET COUNT COMMENTS -- DRAFT
+    getTotalComments=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getTotalCommentsCount();
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las cantidades de comentarios'});
+            }
+    
+            return res.status(200).json(response);
+    
+        }catch(error:any){
+            return res.status(400).json({message:`ha ocurrido un error inesperado ${error.message}`});
+    
+        }
+    }
 
     //ENDPOINT TO GET ALL MY TASK BY TASK ID
     getMyCommentsByTaskId=async(req:AuthRequest, res:Response) :Promise<Response> => {
@@ -241,7 +253,6 @@ export class CommentsController{
             return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});  
         }
     }
-
 
     //ENDPOINT TO DELETE COMMENTS BY TASK ID - CASCADE DELETE
     deleteCommentsByTaskId=async(req:AuthRequest, res:Response) : Promise<Response> => {
