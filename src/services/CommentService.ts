@@ -8,15 +8,21 @@ import { CommentsEntity } from "../models/entities/CommentsEntity";
 import { B2Service } from "./B2Service";
 import { SessionFileDTO } from "../models/DTOs/SessionFileDTO";
 import { CommentUpdateDTO, UpdateCommentFileDTO } from "../models/DTOs/CommentUpdateDTO";
+import { IS3Service } from "../interfaces/IS3/IS3Service";
 
 export class CommentService implements ICommentsService{
 
     private _repo:ICommentsRepository;
     private _b2: IB2Service;
+    private _s3: IS3Service;
 
-    constructor(repo:ICommentsRepository, b2:IB2Service){
+    constructor(repo:ICommentsRepository, 
+                b2:IB2Service,
+                s3:IS3Service
+    ){
         this._repo=repo;
         this._b2=b2;
+        this._s3=s3;
     }
 
     //FOR COMMENT
@@ -66,7 +72,10 @@ export class CommentService implements ICommentsService{
                 for(const comment of commentsFiles){
                     for(const file of comment.archivos){
                         console.log(`accediento a el nombre del archivo ${file.nombre}`);
-                        await this._b2.deleteFile(file.nombre);
+                        /* await this._b2.deleteFile(file.nombre); */
+
+                        //THIS IS THE STEP TO S3 BUCKET
+                        await this._s3.deleteFile(file.nombre);
                         console.log('archivo eliminado hasta este momento');
                     }
                 }
@@ -106,7 +115,10 @@ export class CommentService implements ICommentsService{
             // 2. Eliminar archivos en Backblaze
             for(const file of response.archivos){
                 console.log(`accediento a el nombre del archivo ${file.nombre}`);
-                await this._b2.deleteFile(file.nombre);
+                /* await this._b2.deleteFile(file.nombre); */
+
+                //THIS IS THE STEP TO S3 BUCKET
+                await this._s3.deleteFile(file.nombre);
                 console.log('archivo eliminado hasta este momento');
             }
             
@@ -143,7 +155,10 @@ export class CommentService implements ICommentsService{
         }
         console.log(`archivo encontrado ${file.nombre} ; url ${file.url}`);
 
-        const url=await this._b2.getUriFile(file.url);
+        /* const url=await this._b2.getUriFile(file.url); */
+
+        //THIS IS THE STEP TO S3 BUCKET
+        const url=await this._s3.getUriFile(file.url);
         console.log(`esta es la url temporal ${url}`);
 
         return {
@@ -168,7 +183,7 @@ export class CommentService implements ICommentsService{
 
         // 2. Subir archivos a Backblaze B2 si existen
 
-        finalFiles=await this.uploadNewFileIntoB2ByUpdate(finalFiles, data.archivos ?? []);
+        finalFiles=await this.uploadNewFileIntoB2OrS3ByUpdate(finalFiles, data.archivos ?? []);
 
         
         //WE FILL THE REST ATTRIBUTES
@@ -295,7 +310,7 @@ export class CommentService implements ICommentsService{
         } */
 
         try{
-            await this.deleteFilesIntoB2AndArray(comment, data);
+            await this.deleteFilesIntoB2OrS3AndArray(comment, data);
 
             /* const result=await this.uploadNewFileIntoB2ByUpdate(comment, data); */
 
@@ -306,7 +321,7 @@ export class CommentService implements ICommentsService{
             commentUpdated.archivos=result.archivos ?? []; */
 
 
-            const result=await this.uploadNewFileIntoB2ByUpdate(comment.archivos, data.archivosCargados ?? []);
+            const result=await this.uploadNewFileIntoB2OrS3ByUpdate(comment.archivos, data.archivosCargados ?? []);
 
             commentUpdated._id=comment._id;
             commentUpdated.mensaje=comment.mensaje ?? 'no message';
@@ -359,7 +374,7 @@ export class CommentService implements ICommentsService{
 
 
     //METHOD TO DELETE THE FILE INTO B2 AND THE ARRAY INTO THE OBJECT CommentDTO
-    private async deleteFilesIntoB2AndArray(comment:any, data:UpdateCommentFileDTO) : Promise<void> {
+    private async deleteFilesIntoB2OrS3AndArray(comment:any, data:UpdateCommentFileDTO) : Promise<void> {
         //WE ASK IF THE USER SEND FILES OR THE ID THE FILE ID
         if(data.archivosEliminar && data.archivosEliminar?.length>0){
             //RUN THE FOR CICLE BY FIND THE FILEID TO DELETE
@@ -377,7 +392,11 @@ export class CommentService implements ICommentsService{
                     console.log(`eliminaremos el archivo con nombre ${fileFound.nombre}`);
 
                     //DELETE THE FILE INTO THE BUCKET OF B2
-                    await this._b2.deleteFile(fileFound.nombre);
+                    /* await this._b2.deleteFile(fileFound.nombre);
+                    console.log('archivo eliminado correctamente'); */
+
+                    //THIS IS THE STEP TO S3 BUCKET
+                    await this._s3.deleteFile(fileFound.nombre);
                     console.log('archivo eliminado correctamente');
 
                     //DELETE THE FILE INTO THE ARRAY OF THE COMMENT ARCHIVOS
@@ -397,7 +416,7 @@ export class CommentService implements ICommentsService{
     }
 
     //METHOD TO UPLOAD THE FILE INTO THE BUCKET OF B2 AND INTO THE ARRAY OF COMMENT BY THE URL
-    private async uploadNewFileIntoB2ByUpdate(comment:any[], data:FileInputDTO[]) : Promise<any> {
+    private async uploadNewFileIntoB2OrS3ByUpdate(comment:any[], data:FileInputDTO[]) : Promise<any> {
         //NOW IN THIS SECTION ASK IF THE USER UPLOAD NEW FILES INTO THE COMMENT
         /* if(data.archivosCargados && data.archivosCargados.length>0){ */
         if(data && data.length>0)
@@ -417,12 +436,18 @@ export class CommentService implements ICommentsService{
                     console.log(`nombre del archivo mandado ${nombreFinal}`);
 
 
-                    console.log('Empezamos a subir el archivo a lo que es el bucket de b2');
+                    /* console.log('Empezamos a subir el archivo a lo que es el bucket de b2');
                     const fileName=await this._b2.uploadFile(
                         file.buffer,
                         nombreFinal
-                    );
+                    ); */
 
+                    //THIS IS THE STEP BY BUCKET S3
+                    console.log('empezamos a subir los archivos hacia el bucket de s3');
+                    const fileName=await this._s3.uploadFile(
+                        file.buffer,
+                        nombreFinal
+                    );
                     console.log(`nombre del archivo generado dentro del bucket, guardamos solo la ruta ${fileName}`);
 
                     //Montamos las url dadas y los nombres de los archivos

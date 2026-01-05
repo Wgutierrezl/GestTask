@@ -14,6 +14,7 @@ import { BUsersService } from "../services/BUsersService";
 import { CommentService } from "../services/CommentService";
 import { DashboardService } from "../services/DashboardService";
 import { PipelinesService } from "../services/PipelinesService";
+import { S3Service } from "../services/S3Service";
 import { TaskService } from "../services/TaskService";
 import { UserService } from "../services/UserService";
 import { Response } from "express";
@@ -36,7 +37,8 @@ export class DashboardController{
         //DEPENDENCIES FOR THE COMMENTS
         const commentRepo=new CommentsRepository();
         const b2Service=new B2Service();
-        const commentService=new CommentService(commentRepo, b2Service);
+        const s3=new S3Service();
+        const commentService=new CommentService(commentRepo, b2Service,s3);
 
         //DEPENDECIES FOR THE TASK
         const taskService=new TaskService(taskRepo, commentService);

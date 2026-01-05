@@ -8,6 +8,7 @@ import { CommentService } from "../services/CommentService";
 import { CreateCommentDTO } from "../models/DTOs/CommentsDTO";
 import { UpdateCommentFileDTO } from "../models/DTOs/CommentUpdateDTO";
 import { AuthRequest } from "../middleware/genericMiddleware";
+import { S3Service } from "../services/S3Service";
 
 
 export class CommentsController{
@@ -17,7 +18,8 @@ export class CommentsController{
     constructor(){
         const repo=new CommentsRepository();
         const b2=new B2Service();
-        this._service=new CommentService(repo,b2);
+        const s3=new S3Service();
+        this._service=new CommentService(repo,b2, s3);
     }
 
 

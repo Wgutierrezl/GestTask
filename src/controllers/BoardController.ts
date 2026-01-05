@@ -16,6 +16,7 @@ import { TaskService } from "../services/TaskService";
 import { CommentsRepository } from "../repositories/CommentsRepository";
 import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
+import { S3Service } from "../services/S3Service";
 
 export class BoardController{
 
@@ -29,7 +30,8 @@ export class BoardController{
         const taskRepo=new TaskRepository();
         const commentRepo=new CommentsRepository();
         const b2Service=new B2Service();
-        const commentService=new CommentService(commentRepo, b2Service);
+        const s3=new S3Service();
+        const commentService=new CommentService(commentRepo, b2Service, s3);
         const taskService=new TaskService(taskRepo,commentService);
         const pipeService=new PipelinesService(pipeRepo, taskService);
         this._service=new BoardService(repo, boardMember, pipeService);

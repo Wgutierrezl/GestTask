@@ -10,6 +10,7 @@ import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
 import { StageDTO } from "../models/DTOs/StageDTO";
 import { TaskUpdate } from "../models/DTOs/TaskUpdateDTO";
+import { S3Service } from "../services/S3Service";
 
 export class TaskController{
 
@@ -19,7 +20,8 @@ export class TaskController{
         const repo=new TaskRepository();
         const commentRepo=new CommentsRepository()
         const b2Service=new B2Service();
-        const commentService=new CommentService(commentRepo, b2Service);
+        const s3=new S3Service();
+        const commentService=new CommentService(commentRepo, b2Service, s3);
 
         this._service=new TaskService(repo, commentService);
     }
