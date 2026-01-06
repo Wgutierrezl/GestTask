@@ -23,6 +23,19 @@ export class UserService implements IUserService{
         this._hasher=hasher;
     }
 
+    async getTotalUsersCount(): Promise<number> {
+        const data=await this._repo.getTotalUsers();
+        if(!data){
+            throw new Error("no hemos logrado acceder a la cantidad de usuarios");
+        }
+
+        if(data===0){
+            return 0;
+        }
+
+        return data;
+    }
+
     async loginOauth0(accessToken:string): Promise<SessionDTO> {
         /* let user=await this._repo.getUserByEmail(payload.email); */
 
@@ -108,7 +121,6 @@ export class UserService implements IUserService{
         return saved;
     }
 
-
     async login(loginDTO: LoginDTO): Promise<SessionDTO | null> {
         const user=await this._repo.getUserByEmail(loginDTO.email);
         console.log("User found",user);
@@ -133,7 +145,6 @@ export class UserService implements IUserService{
         return Session;
 
     }
-
 
     async getUserById(id: string): Promise<UserInfoDTO | null> {
         const user=await this._repo.getUserById(id);

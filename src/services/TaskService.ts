@@ -17,6 +17,44 @@ export class TaskService implements ITaskService{
 
     }
 
+    //FOR COMMENT -- DASHBOARD
+    async getTotalTaskByPipelinesId(pipelinesId: string[]): Promise<number> {
+        const response=await this._repo.getTotalTaskByPipelinesId(pipelinesId);
+        console.log(`cantidad de tareas dentro de cada pipelines ${response}`);
+
+
+        if(!response){
+            throw new Error("no hemos logrado acceder a la cantidad de tareas por pipelines");
+        }
+
+        return response;
+    }
+
+    //FOR COMMENT
+    async getTotalTaskByUserId(userId: string): Promise<number> {
+        const response=await this._repo.getTotalTaskByUserId(userId);
+        console.log(`total de tareas que el usuario tiene asignadas ${response}`);
+
+        if(!response){
+            throw new Error("no hemos lograco acceder a las tareas que este tiene asignadas");
+        }
+
+        return response;
+    }
+
+    async getTotalTtasksCount(): Promise<number> {
+        const data=await this._repo.getTotalTask();
+        if(!data){
+            throw new Error("No hemos logrado acceder a la cantidad de tareas");
+        }
+
+        if(data===0){
+            return 0;
+        }
+
+        return data;
+    }
+
     //Method to Update a Task
     async updateTaskById(id: string, data: TaskUpdate): Promise<TaskInfoDTO | null> {
         const task=await this._repo.getTaskById(id);

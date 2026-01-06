@@ -15,4 +15,7 @@ export interface ICommentsService{
     //METHOD TO DELETE COMMENTS BY TASK ID - CASCADE DELETE
     deleteCommentsByTaskId(taskId:string[]) : Promise<boolean | null>;
     getCommentsByTaskId(tasksId:string[]) : Promise<any[]>;
+
+    getTotalCommentsCount() : Promise<number>;
+    getTotalCommentsByUserId(userId:string) : Promise<number>
 }

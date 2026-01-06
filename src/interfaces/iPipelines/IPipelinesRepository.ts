@@ -9,4 +9,8 @@ export interface IPipelinesRepository{
     getPipelinesByBoardId(boardId:string): Promise<any[] | null>;
     updatePipelines(data:PipeUpdateDTO) : Promise<any>;
     deletePipelinesById(id:string) : Promise<any>;
+
+    getTotalPipelines() : Promise<number>;
+    getTotalPipelinesByBoardsId(boardsId:string[]) : Promise<number>;
+    getTotalPipelinesIdByBoardsId(boardsId:string[]) : Promise<any[]>;
 }

@@ -6,6 +6,18 @@ import mongoose from "mongoose";
 
 export class CommentsRepository implements ICommentsRepository{
 
+    //METHOD TO GET QUANTITY BY USER ID
+    async getTotalCommentsByUserId(userId: string): Promise<number> {
+        return await Comments.countDocuments({
+            usuarioId:userId
+        });
+    }
+
+    //METHOD TO GET ALL THE COUNT BY COMMENTS
+    async getTotalComments(): Promise<number> {
+        return await Comments.countDocuments();
+    }
+
     //METHOD TO GET COMMENTS BY TASK IDS - FOR CASCADE DELETE
     async getCommentsByTaskId(tasksId: string[]): Promise<any[]> {
         return await Comments.find({tareaId: { $in: tasksId }});

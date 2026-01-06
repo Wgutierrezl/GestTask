@@ -10,6 +10,7 @@ import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
 import { StageDTO } from "../models/DTOs/StageDTO";
 import { TaskUpdate } from "../models/DTOs/TaskUpdateDTO";
+import { S3Service } from "../services/S3Service";
 
 export class TaskController{
 
@@ -19,7 +20,8 @@ export class TaskController{
         const repo=new TaskRepository();
         const commentRepo=new CommentsRepository()
         const b2Service=new B2Service();
-        const commentService=new CommentService(commentRepo, b2Service);
+        const s3=new S3Service();
+        const commentService=new CommentService(commentRepo, b2Service, s3);
 
         this._service=new TaskService(repo, commentService);
     }
@@ -40,7 +42,6 @@ export class TaskController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
-
 
     updateTask=async(req:Request, res:Response) : Promise<Response> => {
         try{
@@ -88,7 +89,6 @@ export class TaskController{
         }
     }
 
-
     getTaskByPipelineId=async(req:Request, res:Response) : Promise<Response> => {
         try{
             const {pipelineId}=req.params;
@@ -109,7 +109,6 @@ export class TaskController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
-
 
     getTaskByUser_Pipeline_Board=async(req: Request, res:Response) : Promise<Response> => {
         try{
@@ -140,7 +139,21 @@ export class TaskController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
-
+    
+    //-- DRAFT
+    getTotalTasks=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getTotalTtasksCount();
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las cantidades de tareas'});
+            }
+            
+            return res.status(200).json(response);
+            
+        }catch(error:any){
+            return res.status(400).json({message:`ha ocurrido un error inesperado ${error.message}`});
+        }
+    }
 
     getTaskById=async(req: Request, res:Response) : Promise<Response> => {
         try{
@@ -164,7 +177,6 @@ export class TaskController{
         }
     }
 
-    
     deleteTask=async(req: Request, res:Response) : Promise<Response> => {
         try{
             const {id}=req.params;
@@ -186,7 +198,6 @@ export class TaskController{
         }
     }
 
-
     deleteTaskByPipelineId=async(req:AuthRequest, res:Response) : Promise<Response> => {
         try{
             const {pipelineId}=req.params;
@@ -204,7 +215,6 @@ export class TaskController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
-
 
     getMyTaskByPipeline_Board_Id=async(req:AuthRequest, res:Response) => {
         try{

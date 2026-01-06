@@ -133,4 +133,18 @@ export class UserController{
             return res.status(500).json({message:`Ha ocurrido un error inesperado ${error}`});
         }
     }
+    //-- DRAFT
+    getTotalUsers=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getTotalUsersCount();
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las cantidades de usuarios'});
+            }
+            
+            return res.status(200).json(response);
+            
+        }catch(error:any){
+            return res.status(400).json({message:`ha ocurrido un error inesperado ${error.message}`});
+        }
+    }
 }

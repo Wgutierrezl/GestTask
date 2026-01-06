@@ -8,4 +8,8 @@ export interface IPipelinesService{
     getPipelinesByBoardId(boardId:string): Promise<PipelinesInfoDTO[] | null>;
     updatePipelines(id:string, data:pipelinesDTO) : Promise<PipeUpdateDTO | null>;
     deletePipelinesById(id:string) : Promise<any>;
+
+    getTotalPipelinesCount() : Promise<number>;
+    getTotalPipelinesByBoardsId(boardsId:string[]) : Promise<number>;
+    getTotalPipelinesIdByBoardsId(boardsId:string[]) : Promise<any[]>;
 }

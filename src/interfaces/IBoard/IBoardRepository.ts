@@ -14,4 +14,6 @@ export interface IBoardRepository{
     updateBoards(data:BoardUpdateDTO) : Promise<any>;
     deleteBoardById(id: string) : Promise<any>;
 
+    getTotalBoards() : Promise<number>
+
 }
