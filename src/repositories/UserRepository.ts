@@ -5,10 +5,15 @@ import { UserEntity } from "../models/entities/UserEntity";
 
 
 export class UserRepository implements IUserRepository{
+
+    //METHOD TO GET COUNT BY ALL THE USERS
+    async getTotalUsers(): Promise<number> {
+        return await User.countDocuments();
+    }
+
     async getAllUsers(): Promise<any> {
         return await User.find();
     }
-
 
     async createUser(user: UserEntity): Promise<any> {
         const newUser=new User(user);

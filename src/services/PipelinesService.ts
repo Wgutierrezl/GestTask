@@ -15,6 +15,43 @@ export class PipelinesService implements IPipelinesService{
         this._taskService=taskService;
     }
 
+    //FOR COMMENTS
+    async getTotalPipelinesIdByBoardsId(boardsId: string[]): Promise<any[]> {
+        const response=await this._repo.getTotalPipelinesIdByBoardsId(boardsId);
+        console.log(`pipelinesId encontrados : ${response.length}`);
+        if(!response || response.length===0){
+            return []
+        }
+
+        return response;
+    }
+
+    // FOR COMMENT
+    async getTotalPipelinesByBoardsId(boardsId: string[]): Promise<number> {
+        const response=await this._repo.getTotalPipelinesByBoardsId(boardsId);
+        console.log(`numero de pipelies creados en los tableros del usuario ${response}`);
+
+        if(!response){
+            throw new Error("No hemos logrado acceder a la cantidad de pipelines");
+        }
+
+        return response;
+    }
+    
+    // FOR COMMENT
+    async getTotalPipelinesCount(): Promise<number> {
+        const data=await this._repo.getTotalPipelines();
+        if(!data){
+            throw new Error("no hemos logrado acceder a la cantidad de pipelines creados");
+        }
+
+        if(data===0){
+            return 0;
+        }
+
+        return data;
+    }
+
     async deletePipelinesById(id: string): Promise<any> {
         //first, we search for the pipeline
         const pipeline=await this._repo.getPipelinesById(id);
@@ -44,7 +81,6 @@ export class PipelinesService implements IPipelinesService{
 
     }
 
-    
     async updatePipelines(id: string, data: pipelinesDTO): Promise<PipeUpdateDTO | null> {
         let pipe=await this._repo.getPipelinesById(id);
         if(pipe==null){
@@ -68,7 +104,6 @@ export class PipelinesService implements IPipelinesService{
         return this.fillAttributesPipeline(pipelineUpdated);
 
     }
-
 
     async createPipelines(data: pipelinesDTO): Promise<pipelinesDTO | null> {
         const pipeline=new PipelinesEntity();
@@ -98,7 +133,6 @@ export class PipelinesService implements IPipelinesService{
 
         return response;
     }
-
 
     async getAllPipelines(): Promise<pipelinesDTO[] | null> {
         const response=await this._repo.getAllPipelines();

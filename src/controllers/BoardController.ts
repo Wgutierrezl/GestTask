@@ -16,6 +16,7 @@ import { TaskService } from "../services/TaskService";
 import { CommentsRepository } from "../repositories/CommentsRepository";
 import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
+import { S3Service } from "../services/S3Service";
 
 export class BoardController{
 
@@ -29,7 +30,8 @@ export class BoardController{
         const taskRepo=new TaskRepository();
         const commentRepo=new CommentsRepository();
         const b2Service=new B2Service();
-        const commentService=new CommentService(commentRepo, b2Service);
+        const s3=new S3Service();
+        const commentService=new CommentService(commentRepo, b2Service, s3);
         const taskService=new TaskService(taskRepo,commentService);
         const pipeService=new PipelinesService(pipeRepo, taskService);
         this._service=new BoardService(repo, boardMember, pipeService);
@@ -97,6 +99,22 @@ export class BoardController{
             return res.status(500).json({message:`ha ocurrido un error inesperado ${error}`});
         }
 
+    }
+
+    //METHOD TO GET TOTAL BOARDS -- DRAFT
+    getTotalBoards=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getTotalBoardsCount();
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las cantidades de tableros'});
+            }
+
+            return res.status(200).json(response);
+
+        }catch(error:any){
+            return res.status(400).json({message:`ha ocurrido un error inesperado ${error.message}`});
+
+        }
     }
 
     updateBoard=async(req:Request, res:Response) : Promise<Response> => {

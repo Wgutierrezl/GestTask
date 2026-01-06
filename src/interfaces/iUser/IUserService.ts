@@ -10,4 +10,6 @@ export interface IUserService{
     getUserById(id:string): Promise<UserInfoDTO | null>;
     getAllUsers() : Promise<UserInfoDTO | null>;
     loginOauth0(accessToken:string) : Promise<SessionDTO>;
+
+    getTotalUsersCount() : Promise<number>;
 }

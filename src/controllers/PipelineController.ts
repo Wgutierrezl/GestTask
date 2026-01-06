@@ -8,6 +8,8 @@ import { TaskService } from "../services/TaskService";
 import { CommentsRepository } from "../repositories/CommentsRepository";
 import { B2Service } from "../services/B2Service";
 import { CommentService } from "../services/CommentService";
+import { AuthRequest } from "../middleware/genericMiddleware";
+import { S3Service } from "../services/S3Service";
 
 export class PipelineController{
 
@@ -18,7 +20,8 @@ export class PipelineController{
         const taskRepo=new TaskRepository();
         const commentRepo=new CommentsRepository();
         const b2Service=new B2Service();
-        const commentService=new CommentService(commentRepo, b2Service);
+        const s3=new S3Service();
+        const commentService=new CommentService(commentRepo, b2Service, s3);
         const taskService=new TaskService(taskRepo, commentService);
 
         this._service=new PipelinesService(pipe, taskService);
@@ -80,7 +83,22 @@ export class PipelineController{
             return res.status(500).json({ message: "Aun no hay pipelines" });
         }
     }
-
+    
+    //-- DRAFT
+    getTotalPipelines=async(req:AuthRequest, res:Response) : Promise<Response> => {
+        try{
+            const response=await this._service.getTotalPipelinesCount();
+            if(!response){
+                return res.status(400).json({message:'no hemos logrado acceder a las cantidades de pipelines'});
+            }
+        
+            return res.status(200).json(response);
+        
+        }catch(error:any){
+            return res.status(400).json({message:`ha ocurrido un error inesperado ${error.message}`});
+    
+        }
+    }
 
     getPipelineByBoardId=async(req:Request, res:Response): Promise<Response> => {
         try{

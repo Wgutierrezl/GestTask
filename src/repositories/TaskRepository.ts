@@ -6,6 +6,27 @@ import { TaskEntity } from "../models/entities/TaskEntity";
 
 export class TaskRepository implements ITaskRepository{
 
+    //METHOD TO GET QUANTITY BY PIPELINES ID ARRAYS
+    async getTotalTaskByPipelinesId(pipelinesId: string[]): Promise<number> {
+        return await Tarea.countDocuments({
+            pipelineId:{
+                $in: pipelinesId.map(id=> new mongoose.Types.ObjectId(id))
+            }
+        })
+    }
+    
+    //METHOD TO GET QUANTITY BY USER ID
+    async getTotalTaskByUserId(userId: string): Promise<number> {
+        return await Tarea.countDocuments({
+            asignadoA:userId
+        });
+    }
+    
+    //METHOD TO GET COUNT BY ALL THE TASK
+    async getTotalTask(): Promise<number> {
+        return await Tarea.countDocuments();
+    }
+
     //METHOD TO DELETE TASKS BY PIPELINE ID
     async deleteTasksByPipelineId(pipelineId: string): Promise<any> {
         return await Tarea.deleteMany({pipelineId: pipelineId});

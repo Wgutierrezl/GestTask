@@ -20,6 +20,30 @@ export class BoardService implements IBoardService{
         this._boardMember=boardMember;
         this._pipelineService=pipelineService;
     }
+
+    async getBoardsByOnerId(userId: string): Promise<BoardInfoDTO[] | null> {
+        const response=await this._repo.getBoardsByOnwerId(userId);
+        console.log(`cantidad de tableros encontrados ${response.length}`);
+
+        if(!response || response.length){
+            return null;
+        }
+
+        return response;
+    }
+
+    async getTotalBoardsCount(): Promise<number> {
+        const data=await this._repo.getTotalBoards();
+
+        if(!data){
+            throw new Error("no hemos logrado obtener la cantidad de tableros");
+        }
+        if(data===0){
+            return 0;
+        }
+
+        return data;
+    }
     
     async deleteBoardById(id: string): Promise<any | null> {
 

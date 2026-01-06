@@ -12,4 +12,7 @@ export interface ICommentsRepository{
     //METHOD TO DELETE COMMENTS BY TASK ID - CASCADE DELETE
     deleteCommentsByTaskIdCascade(taskId:string[]) : Promise<any>;
     getCommentsByTaskId(tasksId:string[]) : Promise<any[]>;
+
+    getTotalComments() : Promise<number>;
+    getTotalCommentsByUserId(userId:string) : Promise<number>
 }
