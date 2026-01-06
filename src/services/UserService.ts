@@ -77,7 +77,7 @@ export class UserService implements IUserService{
         }
 
         const token=this._token.generateToken(user);
-        console.log(`token generated ${token}`);
+        console.log(`token generated with the log user${token}`);
 
         return {
             userId:user._id,
