@@ -141,6 +141,8 @@ export class UserService implements IUserService{
         Session.nombre=user.nombre;
         Session.token=token;
         Session.rol=user.rol;
+
+        console.log(`sesion creada ${Session}`)
         
         return Session;
 
