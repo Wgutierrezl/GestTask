@@ -22,12 +22,9 @@ pipeline {
     }
 
     stage('🏗️ Build Docker Image') {
-      when {
-        expression { env.BRANCH_NAME == 'GT_Oauth0_Jenkins' }
-      }
       steps {
         sh '''
-          docker build -t $IMAGE_NAME .
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
           docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REPOSITORY:$IMAGE_TAG
         '''
       }
