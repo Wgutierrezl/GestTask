@@ -142,7 +142,7 @@ export class UserService implements IUserService{
         Session.token=token;
         Session.rol=user.rol;
 
-        console.log(`sesion creada ${Session}`)
+        console.log(`sesion creada ${Session }`)
         
         return Session;
 
