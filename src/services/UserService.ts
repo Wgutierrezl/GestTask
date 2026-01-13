@@ -142,7 +142,7 @@ export class UserService implements IUserService{
         Session.token=token;
         Session.rol=user.rol;
 
-        console.log(`sesion creada in the services ${Session }`)
+        console.log(`sesion creada in the services by the jwt service ${Session }`)
         
         return Session;
 
